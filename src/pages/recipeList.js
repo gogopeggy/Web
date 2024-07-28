@@ -9,7 +9,6 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 export default function RecipeList() {
@@ -118,29 +117,11 @@ export default function RecipeList() {
                   onClick={() => window.open(recipe["recipe"]["url"])}
                   alt={recipe["recipe"]["label"]}
                 />
-                {/* <p
-                  className="title"
-                  style={{ textAlign: "center" }}
-                  onClick={() => window.open(recipe["recipe"]["url"])}
-                >
-                  {recipe["recipe"]["label"]}
-                </p> */}
-                {/* <Typography textAlign={'center'} ></Typography>
-                 */}
-                {/* <Link
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    window.open(recipe["recipe"]["url"]);
-                  }}
-                >
-                  {recipe["recipe"]["label"]}
-                </Link> */}
                 <Button
                   onClick={() => {
                     window.open(recipe["recipe"]["url"]);
                   }}
-                  // color="#737a80"
+                  color="#505050"
                 >
                   {recipe["recipe"]["label"]}
                 </Button>
