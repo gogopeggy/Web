@@ -283,8 +283,6 @@ export default function Money() {
   function getMonth(e) {
     setCurMonth(moment(e).format("MM"));
     setCurYear(moment(e).format("YYYY"));
-    // getOverall();
-    console.log("🚀 ~ getMonth ~ e:", moment(e).format("YYYY-MM"), moment(e));
   }
 
   return (
