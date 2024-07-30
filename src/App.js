@@ -6,7 +6,8 @@ import NotFound from "./NotFound";
 // import Datepicker from "./components/datepicker";
 import Home from "./Home";
 import RecipeList from "./pages/recipeList";
-import Money from "./pages/money";
+import Money from "./pages/Money/money";
+import Edit from "./pages/Money/edit";
 
 function App() {
   // const today = new Date();
@@ -23,6 +24,7 @@ function App() {
               <Route path="*" element={<NotFound />}></Route>
               <Route path="/recipe" element={<RecipeList />}></Route>
               <Route path="/money" element={<Money />}></Route>
+              <Route path="/money/edit" element={<Edit />}></Route>
             </Routes>
           </div>
         </div>

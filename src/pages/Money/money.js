@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -6,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { DatePicker } from "@mui/x-date-pickers";
+import Button from "@mui/material/Button";
 
 export default function Money() {
   const [curMonth, setCurMonth] = useState(moment().format("MM"));
@@ -13,6 +15,7 @@ export default function Money() {
   const [overall, setOverall] = useState({});
   const [total, setTotal] = useState();
   const [date, getDate] = useState(moment().month());
+  const navigate = useNavigate();
   const color = [
     "#ff9595",
     "#ffb944",
@@ -287,15 +290,25 @@ export default function Money() {
 
   return (
     <Box>
-      <Stack direction={"row"} p={2} justifyContent={"space-between"}>
-        <DatePicker
-          // label={'"month" and "year"'}
-          views={["year", "month"]}
-          format="YYYY-MM"
-          onChange={(e) => getMonth(e)}
-        />
-        <Typography fontWeight={"bold"}>Total Expense: ${total}</Typography>
-      </Stack>
+      {/* <Stack direction={"row"} p={2} justifyContent={"space-between"}> */}
+      <Grid container p={2}>
+        <Grid item md={8}>
+          <DatePicker
+            // label={'"month" and "year"'}
+            views={["year", "month"]}
+            format="YYYY-MM"
+            onChange={(e) => getMonth(e)}
+            sx={{ pr: 1 }}
+          />
+          <Button variant="outlined" onClick={() => navigate("/money/edit")}>
+            Add
+          </Button>
+        </Grid>
+        <Grid item md={4} textAlign={"right"}>
+          <Typography fontWeight={"bold"}>Total Expense: ${total}</Typography>
+        </Grid>
+      </Grid>
+      {/* </Stack> */}
       <Grid container>
         {Object.keys(overall).map((o, index) => (
           <Grid item md={3} p={2} key={o + index}>
