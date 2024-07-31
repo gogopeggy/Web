@@ -16,126 +16,19 @@ export default function Money() {
   const [total, setTotal] = useState();
   const [date, getDate] = useState(moment().month());
   const navigate = useNavigate();
-  const color = [
-    "#ff9595",
-    "#ffb944",
-    "#ffea44",
-    "#c1ff44",
-    "#44ff96",
-    "#44ffd4",
-    "#9ceeff",
-    "#44c9ff",
-    "#e8abff",
-  ];
+  const color = {
+    Transportation: "#ff9595",
+    Food: "#ffb944",
+    Social: "#ffea44",
+    Shopping: "#c1ff44",
+    Others: "#44ff96",
+    Investment: "#44ffd4",
+    Fun: "#9ceeff",
+    "Fixed Expense": "#44c9ff",
+    Daily: "#e8abff",
+  };
+
   const cashRecords = [
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 10,
-    //   type: "Food",
-    //   method: "Cash",
-    //   amount: 500,
-    //   note: "Salary",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 14,
-    //   type: "Transportation",
-    //   method: "Credit",
-    //   amount: 250,
-    //   note: "Groceries",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 22,
-    //   type: "Fun",
-    //   method: "Debit",
-    //   amount: 300,
-    //   note: "Freelance project",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 5,
-    //   type: "Social",
-    //   method: "Cash",
-    //   amount: 100,
-    //   note: "Transportation",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 18,
-    //   type: "Fixed Expense",
-    //   method: "Bank Transfer",
-    //   amount: 800,
-    //   note: "Bonus",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 29,
-    //   type: "Daily",
-    //   method: "Mobile Payment",
-    //   amount: 200,
-    //   note: "Utilities",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 12,
-    //   type: "Shopping",
-    //   method: "Cash",
-    //   amount: 400,
-    //   note: "Gift",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 25,
-    //   type: "Investment",
-    //   method: "Debit",
-    //   amount: 150,
-    //   note: "Dining out",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 8,
-    //   type: "Others",
-    //   method: "Credit",
-    //   amount: 700,
-    //   note: "Investment return",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 17,
-    //   type: "Food",
-    //   method: "Bank Transfer",
-    //   amount: 300,
-    //   note: "Shopping",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 21,
-    //   type: "Social",
-    //   method: "Mobile Payment",
-    //   amount: 600,
-    //   note: "Part-time job",
-    // },
-    // {
-    //   month: "Jan",
-    //   year: 2023,
-    //   date: 31,
-    //   type: "Transportation",
-    //   method: "Cash",
-    //   amount: 500,
-    //   note: "Holiday gifts",
-    // },
     {
       month: "01",
       year: "2024",
@@ -271,14 +164,18 @@ export default function Money() {
   function getOverall(month, year) {
     let all = {};
     let sum = 0;
-    let curdata = cashRecords.filter(
+    Object.keys(color).map((c) => (all[c] = 0));
+    const curdata = cashRecords.filter(
       (f) => f.month === month && f.year === year
     );
     curdata.map((c) => {
       all[c.type] = (all[c.type] || 0) + c.amount;
       sum += c.amount;
     });
-    setOverall(all);
+    let sort = Object.entries(all);
+    sort.sort((a, b) => b[1] - a[1]);
+    sort = Object.fromEntries(sort);
+    setOverall(sort);
     setTotal(sum);
     //react-hooks/exhaustive-deps
   }
@@ -288,9 +185,18 @@ export default function Money() {
     setCurYear(moment(e).format("YYYY"));
   }
 
+  function getData(type) {
+    console.log("type", type, curMonth);
+    let filter = cashRecords.filter(
+      (r) => r.type === type && r.month === curMonth && r.year === curYear
+    );
+    filter.map((f) => (f["id"] = Math.random()));
+    console.log("🚀 ~ getData ~ filter:", filter);
+    navigate("/money/details", { state: { data: filter } });
+  }
+
   return (
     <Box>
-      {/* <Stack direction={"row"} p={2} justifyContent={"space-between"}> */}
       <Grid container p={2}>
         <Grid item md={8}>
           <DatePicker
@@ -314,11 +220,14 @@ export default function Money() {
           <Grid item md={3} p={2} key={o + index}>
             <Paper
               elevation={3}
-              sx={{ p: 2, height: 80, backgroundColor: color[index] }}
+              sx={{ p: 2, height: 80, backgroundColor: color[o] }}
             >
-              <Typography paddingBottom={1} color={"text.secondary"}>
+              <Button
+                sx={{ fontSize: 12, color: "#686868" }}
+                onClick={() => getData(o)}
+              >
                 {o}
-              </Typography>
+              </Button>
               <Typography
                 fontSize={24}
                 textAlign={"center"}
