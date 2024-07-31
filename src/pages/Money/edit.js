@@ -13,7 +13,7 @@ export default function Edit() {
     <Box>
       <Box>
         <Button variant="outlined" onClick={() => navigate("/money")}>
-          Back
+          Back/
         </Button>
       </Box>
       <Box>
