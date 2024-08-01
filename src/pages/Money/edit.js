@@ -12,7 +12,7 @@ export default function Edit() {
   return (
     <Box>
       <Box>
-        <Button variant="outlined" onClick={() => navigate("/money")}>
+        <Button variant="outlined" onClick={() => navigate("/expense")}>
           Back/
         </Button>
       </Box>

@@ -6,7 +6,7 @@ import NotFound from "./NotFound";
 // import Datepicker from "./components/datepicker";
 import Home from "./Home";
 import RecipeList from "./pages/recipeList";
-import Money from "./pages/Money/money";
+import Expense from "./pages/Money/expense";
 import Edit from "./pages/Money/edit";
 import Details from "./pages/Money/details";
 
@@ -24,9 +24,9 @@ function App() {
               </Route>
               <Route path="*" element={<NotFound />}></Route>
               <Route path="/recipe" element={<RecipeList />}></Route>
-              <Route path="/money" element={<Money />}></Route>
-              <Route path="/money/edit" element={<Edit />}></Route>
-              <Route path="/money/details" element={<Details />}></Route>
+              <Route path="/expense" element={<Expense />}></Route>
+              <Route path="/expense/edit" element={<Edit />}></Route>
+              <Route path="/expense/details" element={<Details />}></Route>
             </Routes>
           </div>
         </div>

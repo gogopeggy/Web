@@ -18,32 +18,32 @@ export default function Details() {
     {
       field: "year",
       headerName: "Year",
-      width: 60,
+      width: 70,
       editable: true,
     },
     {
       field: "month",
       headerName: "Month",
-      width: 60,
+      width: 70,
       editable: true,
     },
     {
       field: "date",
       headerName: "Date",
-      width: 40,
+      width: 70,
       editable: true,
     },
     {
       field: "method",
       headerName: "Method",
-      width: 80,
+      width: 120,
       editable: true,
     },
     ,
     {
       field: "type",
       headerName: "Type",
-      width: 100,
+      width: 120,
       editable: true,
     },
     {
@@ -67,7 +67,7 @@ export default function Details() {
   return (
     <Box>
       <Box>
-        <Button variant="outlined" onClick={() => navigate("/money")}>
+        <Button variant="outlined" onClick={() => navigate("/expense")}>
           Back
         </Button>
       </Box>
