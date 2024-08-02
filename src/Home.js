@@ -1,55 +1,29 @@
 import React, { useState, useEffect } from "react";
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import moment from "moment";
-import axios from "axios";
+// import axios from "axios";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-// import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-// import InputLabel from "@mui/material/InputLabel";
-// import MenuItem from "@mui/material/MenuItem";
-// import FormControl from "@mui/material/FormControl";
-// import TextField from "@mui/material/TextField";
-// import Select from "@mui/material/Select";
-// import RecipeList from "./recipeList";
 
 export default function Home() {
   const today = moment().format("L");
-  const [weather, setWeather] = useState({});
   const [date, setDate] = useState(new Date());
+  const weather = useSelector((state) => state.user.weather);
 
   useEffect(() => {
-    getWeather();
     const intervalId = setInterval(() => {
       setDate(new Date());
     }, 1000);
 
     return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function getWeather() {
-    axios
-      .get(
-        "https://api.openweathermap.org/data/2.5/weather?lat=25.0651335306964&lon=121.576200811347&lang=zh_tw&units=metric&appid=445813e62fa1a98ba142c1e48ccd0290"
-      )
-      .then((response) => {
-        let data = {};
-        data["main"] = response.data.main;
-        data["des"] = response.data.weather;
-        setWeather(data);
-        // dispatch(data);
-        console.log("response", data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 
   return (
     <Box>
