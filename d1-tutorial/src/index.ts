@@ -15,6 +15,7 @@ export interface Env {
 	// If you set another name in wrangler.toml as the value for 'binding',
 	// replace "DB" with the variable name you defined.
 	DB: D1Database;
+	hedaers: 'GET,HEAD,POST,OPTIONS';
   }
   
   const corsHeaders = {
@@ -37,6 +38,17 @@ export interface Env {
 		  .all();
 		  return new Response(JSON.stringify(results), { headers: corsHeaders });
 	  }
+	  if (pathname === '/api/expense/create') {
+		console.log('res',request)
+		// const { id, year, date, month, method, amount, type, note } = request.body
+		const { results } = await env.DB.prepare(
+			"INSERT INTO Expense values (?)"
+		  )
+		    // .bind([id, year, date, month, method, amount, type, note])
+			.run();
+			return new Response(JSON.stringify(results), { headers: corsHeaders });
+	  }
+
   
 	  return new Response(
 		"Call /api/beverages to see everyone who works at Bs Beverages"
