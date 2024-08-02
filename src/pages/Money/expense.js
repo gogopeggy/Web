@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
@@ -11,11 +10,13 @@ import { DatePicker } from "@mui/x-date-pickers";
 import Button from "@mui/material/Button";
 
 export default function Expense() {
-  const [curMonth, setCurMonth] = useState(moment().format("MM"));
-  const [curYear, setCurYear] = useState(moment().format("YYYY"));
+  const location = useLocation();
+  const checkDate = location.state ? moment(location.state.date) : moment();
+  const [curMonth, setCurMonth] = useState(checkDate.format("MM"));
+  const [curYear, setCurYear] = useState(checkDate.format("YYYY"));
   const [overall, setOverall] = useState({});
   const [total, setTotal] = useState();
-  const [date, setDate] = useState(moment());
+  const [date, setDate] = useState(checkDate);
   const url = "https://d1-tutorial.a29098477.workers.dev/api";
   const [cashRecords, setCashRecords] = useState([]);
   const navigate = useNavigate();
@@ -32,16 +33,20 @@ export default function Expense() {
   };
 
   useEffect(() => {
-    getOverall(curMonth, curYear);
     getExpense();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curMonth, curYear]);
+
+  useEffect(() => {
+    getOverall(curMonth, curYear);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cashRecords]);
 
   async function getExpense() {
     await axios
       .get(`${url}/expense`)
       .then(function (response) {
         // handle success
-        // data = response.data;
         setCashRecords(response.data);
       })
       .catch(function (error) {
@@ -50,7 +55,7 @@ export default function Expense() {
       })
       .finally(function () {
         // always executed
-        console.log("done");
+        // console.log("done");
       });
     // return data;
   }
@@ -65,6 +70,7 @@ export default function Expense() {
     curdata.map((c) => {
       all[c.type] = (all[c.type] || 0) + c.amount;
       sum += c.amount;
+      return all;
     });
     let sort = Object.entries(all);
     sort.sort((a, b) => b[1] - a[1]);
@@ -75,25 +81,26 @@ export default function Expense() {
   }
 
   function getMonth(e) {
-    console.log("🚀 ~ getMonth ~ e:", e);
+    // console.log("🚀 ~ getMonth ~ e:", e);
     setDate(e);
     setCurMonth(moment(e).format("MM"));
     setCurYear(moment(e).format("YYYY"));
   }
 
   function getData(type) {
-    console.log("type", type, curMonth);
     let filter = cashRecords.filter(
       (r) => r.type === type && r.month === curMonth && r.year === curYear
     );
-    filter.map((f) => (f["id"] = Math.random()));
-    console.log("🚀 ~ getData ~ filter:", filter);
-    navigate("/expense/details", { state: { data: filter } });
+    // console.log("🚀 ~ getData ~ filter:", filter);
+    let curDate = moment(date).format("YYYY-MM");
+    navigate("/expense/details", {
+      state: { data: filter, date: curDate, type: type },
+    });
   }
 
   return (
     <Box>
-      <Grid container p={2}>
+      <Grid container px={2}>
         <Grid item md={8}>
           <DatePicker
             // label={'"month" and "year"'}
@@ -117,7 +124,7 @@ export default function Expense() {
           <Grid item md={3} p={2} key={o + index}>
             <Paper
               elevation={3}
-              sx={{ p: 2, height: 80, backgroundColor: color[o] }}
+              sx={{ p: 1, height: 80, backgroundColor: color[o] }}
             >
               <Button
                 sx={{ fontSize: 12, color: "#686868" }}
