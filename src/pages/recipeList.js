@@ -121,7 +121,7 @@ export default function RecipeList() {
                   onClick={() => {
                     window.open(recipe["recipe"]["url"]);
                   }}
-                  color="#505050"
+                  sx={{ color: "#505050" }}
                 >
                   {recipe["recipe"]["label"]}
                 </Button>
