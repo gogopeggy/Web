@@ -13,10 +13,16 @@ import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+// import Autocomplete from "@mui/material/Autocomplete";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import Button from "@mui/material/Button";
+import moment from "moment";
+import { Paper } from "@mui/material";
 
 export default function Details() {
   const navigate = useNavigate();
@@ -25,15 +31,45 @@ export default function Details() {
   // const curType = location.state.type;
   const [open, setOpen] = useState(false);
   const [curRow, setCurRow] = useState({});
-  const [newRow, setNewRow] = useState({});
   const url = "https://d1-tutorial.a29098477.workers.dev/api";
-
+  const yearOptions = [
+    moment().format("YYYY"),
+    moment().subtract(1, "year").year(),
+  ];
+  const days = Array.from({ length: 31 }, (v, k) => k + 1);
+  const months = Array.from({ length: 12 }, (v, k) =>
+    (k + 1).toString().padStart(2, "0")
+  );
+  const methods = ["cash", "credit card", "bank transfer"];
+  const types = [
+    "Transportation",
+    "Food",
+    "Social",
+    "Shopping",
+    "Others",
+    "Investment",
+    "Fun",
+    "Fixed Expense",
+    "Daily",
+  ];
+  const initialRow = {
+    year: yearOptions[0],
+    date: days[0],
+    month: months[0],
+    method: methods[0],
+    amount: "",
+    type: types[0],
+    note: "",
+  };
+  const [newRow, setNewRow] = useState(initialRow);
   const handleClose = () => {
     setOpen(false);
     setCurRow({});
-    setNewRow({});
+    setNewRow(initialRow);
   };
   const rows = location.state.data;
+  const newRowKeys = Object.keys(rows[0]);
+  newRowKeys.splice(Object.keys(rows[0]).indexOf("id"), 1);
   const columns = [
     {
       field: "action",
@@ -118,6 +154,7 @@ export default function Details() {
     console.log("row", event.target.value, key);
     let val = event.target.value;
     let newData = action === "edit" ? { ...curRow } : { ...newRow };
+    console.log("🚀 ~ handleInput ~ newData:", newData);
     if (key === "amount") {
       val = parseInt(val);
     }
@@ -131,24 +168,30 @@ export default function Details() {
   }
 
   const handleSave = () => {
-    if (newRow.id) {
+    console.log("newww", newRow, curRow);
+    if (newRow.year) {
       // create
       console.log("create");
-      // create();
+      // create("create");
     } else {
       //update
+      // create("update");
       console.log("update");
     }
-    handleClose();
+    setTimeout(() => {
+      handleClose();
+    }, 2000);
   };
 
-  // function create() {
-  //   setOpen(true);
-  // }
-
-  async function create() {
+  async function create(action) {
+    let route = action === "create" ? "/expense/create" : "/expense/update";
+    let row = action === "create" ? newRow : curRow;
     await axios
-      .post(`${url}/expense/create`, newRow)
+      .post(`${url}${route}`, row, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then(function (response) {
         // console.log("res", response);
         // handle success
@@ -163,6 +206,66 @@ export default function Details() {
         // console.log("done");
       });
   }
+
+  const EditInput = ({ col }) => {
+    let selectOp;
+    switch (col) {
+      case "year":
+        selectOp = yearOptions;
+        break;
+      case "date":
+        selectOp = days;
+        break;
+      case "month":
+        selectOp = months;
+        break;
+      case "method":
+        selectOp = methods;
+        break;
+      case "type":
+        selectOp = types;
+        break;
+      default:
+        break;
+    }
+
+    switch (col) {
+      case "year":
+      case "date":
+      case "month":
+      case "method":
+      case "type":
+        return (
+          <FormControl fullWidth>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curRow[col] || selectOp[0]}
+              label="Age"
+              size="small"
+              sx={{ width: 200 }}
+              onChange={(e) => handleInput(e, col, "edit")}
+              MenuProps={{ PaperProps: { sx: { maxHeight: 100 } } }}
+            >
+              {selectOp.map((y) => (
+                <MenuItem value={y}>{y}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        );
+      default:
+        return (
+          <TextField
+            value={curRow[col]}
+            variant="standard"
+            size="small"
+            disabled={col === "id" && curRow.id}
+            onChange={(e) => handleInput(e, col, "edit")}
+            // required={c !== "note"}
+          />
+        );
+    }
+  };
 
   return (
     <Box>
@@ -211,7 +314,6 @@ export default function Details() {
           <Grid container>
             {curRow.id
               ? Object.keys(curRow).map((c) => (
-                  // console.log("c", c);
                   <Grid item md={6} key={c} alignContent={"center"} p={1}>
                     <Typography
                       color={"text.secondary"}
@@ -220,17 +322,18 @@ export default function Details() {
                     >
                       {c}
                     </Typography>
-                    <TextField
+                    <EditInput col={c} />
+                    {/* <TextField
                       value={curRow[c]}
                       variant="standard"
                       size="small"
                       disabled={c === "id" && curRow.id}
                       onChange={(e) => handleInput(e, c, "edit")}
                       // required={c !== "note"}
-                    />
+                    /> */}
                   </Grid>
                 ))
-              : Object.keys(rows[0]).map((c) => (
+              : newRowKeys.map((c) => (
                   <Grid item md={6} key={c} alignContent={"center"} p={1}>
                     <Typography
                       color={"text.secondary"}
@@ -239,13 +342,7 @@ export default function Details() {
                     >
                       {c}
                     </Typography>
-                    <TextField
-                      value={curRow[c]}
-                      variant="standard"
-                      size="small"
-                      disabled={c === "id" && curRow.id}
-                      onChange={(e) => handleInput(e, c, "create")}
-                    />
+                    <EditInput col={c} />
                   </Grid>
                 ))}
           </Grid>

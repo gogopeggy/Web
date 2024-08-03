@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS Expense;
-CREATE TABLE IF NOT EXISTS Expense (id INTEGER PRIMARY KEY, year TEXT, date INTEGER, month TEXT, method TEXT, amount INTEGER, type TEXT, note TEXT);
+CREATE TABLE IF NOT EXISTS Expense (id INTEGER PRIMARY KEY AUTOINCREMENT, year TEXT, date INTEGER, month TEXT, method TEXT, amount INTEGER, type TEXT, note TEXT);
 INSERT INTO Expense (id, year, date, month, method, amount, type, note) VALUES (1, '2024', 05, '01', 'cash', 50, 'Food', 'Groceries'),
 (2, '2024', 10, '01', 'credit card', 100, 'Transportation', 'Fuel for car'),
 (3, '2024', 15, '01', 'bank transfer', 75, 'Social', 'Dinner with friends'),
