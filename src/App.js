@@ -32,7 +32,6 @@ function App() {
         data["main"] = response.data.main;
         data["des"] = response.data.weather;
         dispatch(getWeather(data));
-        console.log("response", data);
       })
       .catch((error) => {
         console.error(error);

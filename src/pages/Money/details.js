@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 // import { DatePicker } from "@mui/x-date-pickers";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
@@ -10,28 +10,30 @@ import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-// import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-// import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-
 import Button from "@mui/material/Button";
 import moment from "moment";
-import { Paper } from "@mui/material";
+import { getExpense } from "../../utility";
 
 export default function Details() {
   const navigate = useNavigate();
   const location = useLocation();
   const curMonth = location.state.date;
-  // const curType = location.state.type;
   const [open, setOpen] = useState(false);
   const [curRow, setCurRow] = useState({});
+  const curType = location.state.type;
   const url = "https://d1-tutorial.a29098477.workers.dev/api";
+  const handleClose = () => {
+    setOpen(false);
+    setCurRow({});
+  };
+  const [rows, setRows] = useState(location.state.data);
   const yearOptions = [
     moment().format("YYYY"),
     moment().subtract(1, "year").year(),
@@ -52,24 +54,6 @@ export default function Details() {
     "Fixed Expense",
     "Daily",
   ];
-  const initialRow = {
-    year: yearOptions[0],
-    date: days[0],
-    month: months[0],
-    method: methods[0],
-    amount: "",
-    type: types[0],
-    note: "",
-  };
-  const [newRow, setNewRow] = useState(initialRow);
-  const handleClose = () => {
-    setOpen(false);
-    setCurRow({});
-    setNewRow(initialRow);
-  };
-  const rows = location.state.data;
-  const newRowKeys = Object.keys(rows[0]);
-  newRowKeys.splice(Object.keys(rows[0]).indexOf("id"), 1);
   const columns = [
     {
       field: "action",
@@ -140,54 +124,45 @@ export default function Details() {
     },
   ];
 
-  useEffect(() => {
-    // console.log("🚀 ~ Details ~ data:", rows);
-  }, []);
-
   function startEdit(event, row) {
-    console.log("row", event.target, row);
+    // console.log("row", event.target, row);
     setOpen(true);
     setCurRow(row);
   }
 
-  function handleInput(event, key, action) {
+  function handleInput(event, key) {
     console.log("row", event.target.value, key);
     let val = event.target.value;
-    let newData = action === "edit" ? { ...curRow } : { ...newRow };
-    console.log("🚀 ~ handleInput ~ newData:", newData);
+    let newData = { ...curRow };
+    console.log("🚀 ~ handleInput ~ newData11111111:", newData);
     if (key === "amount") {
-      val = parseInt(val);
+      val = parseInt(val) || "";
     }
     newData[key] = val;
-    console.log("🚀 ~ handleInput ~ newRow:", newData);
-    if (action === "edit") {
-      setCurRow(newData);
-    } else {
-      setNewRow(newData);
-    }
+    console.log("🚀 ~ handleInput ~ newData2222222:", newData);
+    setCurRow(newData);
   }
 
   const handleSave = () => {
-    console.log("newww", newRow, curRow);
-    if (newRow.year) {
-      // create
-      console.log("create");
-      // create("create");
-    } else {
-      //update
-      // create("update");
-      console.log("update");
-    }
+    console.log("curRow", curRow);
+    create();
     setTimeout(() => {
+      getExpense().then((res) => {
+        const update = res.filter(
+          (f) =>
+            f.year === curMonth.split("-")[0] &&
+            f.month === curMonth.split("-")[1] &&
+            f.type === curType
+        );
+        setRows(update);
+      });
       handleClose();
     }, 2000);
   };
 
   async function create(action) {
-    let route = action === "create" ? "/expense/create" : "/expense/update";
-    let row = action === "create" ? newRow : curRow;
     await axios
-      .post(`${url}${route}`, row, {
+      .post(`${url}/expense/update`, curRow, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -198,16 +173,14 @@ export default function Details() {
         // setCashRecords(response.data);
       })
       .catch(function (error) {
-        // handle error
         console.log(error);
       })
       .finally(function () {
-        // always executed
-        // console.log("done");
+        console.log("done");
       });
   }
 
-  const EditInput = ({ col }) => {
+  const EditInput = (col) => {
     let selectOp;
     switch (col) {
       case "year":
@@ -241,10 +214,9 @@ export default function Details() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={curRow[col] || selectOp[0]}
-              label="Age"
               size="small"
               sx={{ width: 200 }}
-              onChange={(e) => handleInput(e, col, "edit")}
+              onChange={(e) => handleInput(e, col)}
               MenuProps={{ PaperProps: { sx: { maxHeight: 100 } } }}
             >
               {selectOp.map((y) => (
@@ -259,9 +231,8 @@ export default function Details() {
             value={curRow[col]}
             variant="standard"
             size="small"
-            disabled={col === "id" && curRow.id}
-            onChange={(e) => handleInput(e, col, "edit")}
-            // required={c !== "note"}
+            disabled={col === "id"}
+            onChange={(e) => handleInput(e, col)}
           />
         );
     }
@@ -275,9 +246,6 @@ export default function Details() {
           onClick={() => navigate("/expense", { state: { date: curMonth } })}
         >
           Back
-        </Button>
-        <Button variant="outlined" onClick={() => setOpen(true)}>
-          Create
         </Button>
       </Box>
       <Box sx={{ height: 400, width: "100%", pt: 2 }}>
@@ -309,47 +277,37 @@ export default function Details() {
               ? "You are going to edit this entry"
               : "Create a new entry"}
           </Typography>
+          <Typography color="error" textAlign={"center"}>
+            please note that amount is requried
+          </Typography>
         </DialogTitle>
         <DialogContent>
           <Grid container>
-            {curRow.id
-              ? Object.keys(curRow).map((c) => (
-                  <Grid item md={6} key={c} alignContent={"center"} p={1}>
-                    <Typography
-                      color={"text.secondary"}
-                      fontWeight={"bold"}
-                      fontSize={14}
-                    >
-                      {c}
-                    </Typography>
-                    <EditInput col={c} />
-                    {/* <TextField
-                      value={curRow[c]}
-                      variant="standard"
-                      size="small"
-                      disabled={c === "id" && curRow.id}
-                      onChange={(e) => handleInput(e, c, "edit")}
-                      // required={c !== "note"}
-                    /> */}
-                  </Grid>
-                ))
-              : newRowKeys.map((c) => (
-                  <Grid item md={6} key={c} alignContent={"center"} p={1}>
-                    <Typography
-                      color={"text.secondary"}
-                      fontWeight={"bold"}
-                      fontSize={14}
-                    >
-                      {c}
-                    </Typography>
-                    <EditInput col={c} />
-                  </Grid>
-                ))}
+            {Object.keys(curRow).map((c) => (
+              <Grid item md={6} key={c} alignContent={"center"} p={1}>
+                <Typography
+                  color={"text.secondary"}
+                  fontWeight={"bold"}
+                  fontSize={14}
+                >
+                  {c}
+                </Typography>
+                {EditInput(c, "edit")}
+              </Grid>
+            ))}
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Discard</Button>
-          <Button onClick={handleSave} autoFocus>
+          <Button onClick={handleClose} variant="outlined" color="error">
+            Discard
+          </Button>
+          <Button
+            onClick={handleSave}
+            variant="outlined"
+            autoFocus
+            color="success"
+            disabled={!curRow.amount}
+          >
             Save
           </Button>
         </DialogActions>

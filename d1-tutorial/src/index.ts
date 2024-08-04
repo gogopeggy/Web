@@ -29,7 +29,6 @@ export interface Env {
 	async fetch(request, env): Promise<Response> {
 		const { url, method } = request;
 		const { pathname } = new URL(url);
-	  // const { pathname } = new URL(request.url);
 
 		async function readRequestBody(request: Request) {
       const contentType = request.headers.get("content-type");
@@ -47,8 +46,6 @@ export interface Env {
         }
         return JSON.stringify(body);
       } else {
-        // Perhaps some other type of data was submitted in the form
-        // like an image, or some other binary data.
         return "a file";
       }
     }
