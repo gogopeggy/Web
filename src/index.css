@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  font-family: "Quicksand";
+  color: #333;
+}
+
+.navbar {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  max-width: 750px;
+  margin: 0 auto;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.navbar h1 {
+  color: rgb(91, 91, 91);
+}
+
+.navbar .links {
+  margin-left: auto;
+}
+
+.navbar a {
+  margin-left: 16px;
+  text-decoration: underline;
+  padding: 6px;
+}
+
+.navbar a:hover {
+  color: #4cdde9;
+}
+
+.content {
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 2px;
+}
+
+.datepicker {
+  width: 350px;
+  height: 240px;
+  font-size: 16px;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.non-current-month {
+  color: #757575;
+  cursor: not-allowed;
+}
+
+.active {
+  background-color: #006edc;
+  color: white;
+}
+
+.day:hover {
+  background-color: #e6e6e6;
+}
+
+.non-current-month:hover {
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.header {
+  width: 350px;
+  height: 44px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.month-button {
+  width: 44px;
+  height: 44px;
+  background-color: white;
+}
+
+.month-button:hover {
+  background-color: #e6e6e6;
+}
+
+.today {
+  background-color: #ffff76
+}
+
