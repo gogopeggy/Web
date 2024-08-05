@@ -7,7 +7,8 @@
 }
 
 .navbar {
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   max-width: 750px;
@@ -34,7 +35,7 @@
 }
 
 .content {
-  max-width: 800px;
+  max-width: 780px;
   margin: 10px auto;
   padding: 2px;
 }
@@ -100,3 +101,11 @@
   background-color: #ffff76
 }
 
+@media (max-width: 600px) {
+  .navbar {
+    max-width: 350px;
+  }
+  .content {
+    max-width: 350px;
+  }
+}
