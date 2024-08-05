@@ -20,37 +20,37 @@ export interface Env {
   const corsHeaders = {
 	'Content-Type': 'application/json',
 	"Access-Control-Allow-Origin": "*",
-	'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS',
+	'Access-Control-Allow-Methods': "GET, PUT, POST, DELETE, OPTIONS",
 	'Access-Control-Allow-Headers': '*',
+	'Access-Control-Allow-Credentials': 'true',
 	"Access-Control-Max-Age": "86400",
 };
 
   export default {
-	async fetch(request, env): Promise<Response> {
-		const { url, method } = request;
-		const { pathname } = new URL(url);
+		async fetch(request, env): Promise<Response> {
+			const { url, method } = request;
+			const { pathname } = new URL(url);
 
-		async function readRequestBody(request: Request) {
-      const contentType = request.headers.get("content-type");
-      if (contentType.includes("application/json")) {
-        return JSON.stringify(await request.json());
-      } else if (contentType.includes("application/text")) {
-        return request.text();
-      } else if (contentType.includes("text/html")) {
-        return request.text();
-      } else if (contentType.includes("form")) {
-        const formData = await request.formData();
-        const body = {};
-        for (const entry of formData.entries()) {
-          body[entry[0]] = entry[1];
-        }
-        return JSON.stringify(body);
-      } else {
-        return "a file";
-      }
-    }
-	
-		  if (method === "POST") {
+			async function readRequestBody(request: Request) {
+				const contentType = request.headers.get("content-type");
+				if (contentType.includes("application/json")) {
+					return JSON.stringify(await request.json());
+				} else if (contentType.includes("application/text")) {
+					return request.text();
+				} else if (contentType.includes("text/html")) {
+					return request.text();
+				} else if (contentType.includes("form")) {
+					const formData = await request.formData();
+					const body = {};
+					for (const entry of formData.entries()) {
+						body[entry[0]] = entry[1];
+					}
+					return JSON.stringify(body);
+				} else {
+					return "a file";
+				}
+			}
+			if (method === "POST") {
 				const reqBody = await readRequestBody(request);
 				if (pathname === '/api/expense/create') {
 					const { year, date, month, method, amount, type, note} = JSON.parse(reqBody);
@@ -67,7 +67,7 @@ export interface Env {
 					return new Response(JSON.stringify(results), { headers: corsHeaders });
 				}
 				return new Response("The request was a POST");
-		  } else if (method === "GET") {
+			} else if (method === "GET") {
 				if (pathname === "/api/expense") {
 					// If you did not use `DB` as your binding name, change it here
 					const { results } = await env.DB.prepare(
@@ -75,9 +75,19 @@ export interface Env {
 					).all();
 						return new Response(JSON.stringify(results), { headers: corsHeaders });
 					}
-		  }
-	  return new Response(
-		"Call /api/beverages to see everyone who works at Bs Beverages", { headers: corsHeaders }
-	  );
-	},
+			} else if (method === "DELETE") {
+				const reqBody = await readRequestBody(request);
+				const { id }= JSON.parse(reqBody).data;
+				if (pathname === `/api/expense/delete`) {
+					const { results } = await env.DB.prepare(
+						"DELETE FROM Expense WHERE id = ?"
+					).bind(id).run();
+	
+					return new Response(JSON.stringify(results), { headers: corsHeaders });
+				} 
+			} 
+			return new Response(
+			"Call /api/expense to see expense", { headers: corsHeaders }
+			);
+		},
   } satisfies ExportedHandler<Env>;
