@@ -45,9 +45,7 @@ function App() {
           <Navbar />
           <div className="content">
             <Routes>
-              <Route exact path="/" element={<Home />}>
-                {/* <Datepicker anyDate={today} /> */}
-              </Route>
+              <Route exact path="/" element={<Home />}></Route>
               <Route path="*" element={<NotFound />}></Route>
               <Route path="/recipe" element={<RecipeList />}></Route>
               <Route path="/expense" element={<Expense />}></Route>
