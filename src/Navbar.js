@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 const Navbar = () => {
   return (
     <nav className="navbar">
-      {/* <h1 color="#1c5488">PeGround</h1> */}
       <img src={logo} alt="logo" width={30} height={30}></img>
       <Typography fontSize={14} pl={1} fontFamily={"system-ui"}>
         Ideas

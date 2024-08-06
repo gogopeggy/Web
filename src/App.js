@@ -7,7 +7,6 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import axios from "axios";
 import Navbar from "./Navbar";
 import NotFound from "./NotFound";
-// import Datepicker from "./components/datepicker";
 import Home from "./Home";
 import RecipeList from "./pages/recipeList";
 import Expense from "./pages/Money/expense";
@@ -15,7 +14,6 @@ import Edit from "./pages/Money/edit";
 import Details from "./pages/Money/details";
 
 function App() {
-  // const today = new Date();
   const dispatch = useDispatch();
   useEffect(() => {
     fetchWeather();

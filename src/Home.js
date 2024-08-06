@@ -25,6 +25,17 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const WeatherInfoGrid = ({ label, value }) => (
+    <Grid item md={3} xs={6}>
+      <Stack direction="row">
+        <Typography variant="body2" fontWeight="bold" pr={2}>
+          {label}:{" "}
+        </Typography>
+        <Typography variant="body2">{value || "Pending"}</Typography>
+      </Stack>
+    </Grid>
+  );
+
   return (
     <Box>
       <Card sx={{ minWidth: 250, backgroundColor: "#f3f3f3" }}>
@@ -50,54 +61,34 @@ export default function Home() {
             Weather
           </Typography>
           <Grid container>
-            <Grid item md={3} xs={6}>
-              <Stack direction={"row"}>
-                <Typography variant="body2" fontWeight={"bold"} pr={2}>
-                  Current:{" "}
-                </Typography>
-                <Typography variant="body2">
-                  {weather.main
-                    ? `${parseInt(weather.main.temp)}\u00b0C`
-                    : "Pending"}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item md={3} xs={6}>
-              <Stack direction={"row"}>
-                <Typography variant="body2" fontWeight={"bold"} pr={2}>
-                  Description:{" "}
-                </Typography>
-                <Typography variant="body2">
-                  {weather.des ? `${weather.des[0].description}` : "Pending"}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item md={2.5} xs={6}>
-              <Stack direction={"row"}>
-                <Typography variant="body2" fontWeight={"bold"} pr={2}>
-                  Feels:{" "}
-                </Typography>
-                <Typography variant="body2">
-                  {weather.main
-                    ? `${parseInt(weather.main.feels_like)}\u00b0C`
-                    : "Pending"}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item md={3.5} xs={6}>
-              <Stack direction={"row"}>
-                <Typography variant="body2" fontWeight={"bold"} pr={2}>
-                  Temp_range:{" "}
-                </Typography>
-                <Typography variant="body2">
-                  {weather.main
-                    ? `${parseInt(weather.main.temp_min)}-${parseInt(
-                        weather.main.temp_max
-                      )}\u00b0C`
-                    : "Pending"}
-                </Typography>
-              </Stack>
-            </Grid>
+            <WeatherInfoGrid
+              label="Current"
+              value={
+                weather.main ? `${parseInt(weather.main.temp)}\u00b0C` : null
+              }
+            />
+            <WeatherInfoGrid
+              label="Description"
+              value={weather.des ? `${weather.des[0].description}` : null}
+            />
+            <WeatherInfoGrid
+              label="Feels"
+              value={
+                weather.main
+                  ? `${parseInt(weather.main.feels_like)}\u00b0C`
+                  : null
+              }
+            />
+            <WeatherInfoGrid
+              label="Temp_range"
+              value={
+                weather.main
+                  ? `${parseInt(weather.main.temp_min)}-${parseInt(
+                      weather.main.temp_max
+                    )}\u00b0C`
+                  : null
+              }
+            />
           </Grid>
         </CardContent>
       </Card>
