@@ -1,8 +1,12 @@
 # A personal ideas hub
+![image](https://github.com/user-attachments/assets/0d66b584-3fc1-4ad5-bd3d-7e2f035f6853)
+![image](https://github.com/user-attachments/assets/42984403-f769-4b57-982d-47abd8dfd7f2)
+
 This web application provides two main features:
 
-Recipe Search: Allows users to search for recipes based on ingredients and preferences.
-Expense Management: Enables users to record, update, delete personal expenses, and view overall statistics by month.
+**Recipe Search:** Allows users to search for recipes based on ingredients and preferences.
+
+**Expense Management:** Enables users to record, update, delete personal expenses, and view overall statistics by month.
 ## Features
 1. **Recipe Search**
     - Ingredient-based Search: Enter ingredients you have on hand to find suitable recipes.
