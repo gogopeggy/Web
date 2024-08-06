@@ -23,7 +23,7 @@ To use this component in your project, follow these steps:
 1. Clone the repository or copy the component files into your project.
 ```bash
 git clone https://github.com/gogopeggy/Web.git
-cd first-build
+cd Web
 ```
 2. Installation:
 ```bash
@@ -33,13 +33,13 @@ npm install
 ```bash
 npm run start
 ```
-4. Make sure to install g serve if you'd like to build:
- ```bash
-npm install -g serve
-```
-5. To build:
+4. To build:
  ```bash
 npm run build
+```
+5. Make sure to install g serve before you serve:
+ ```bash
+npm install -g serve
 ```
 6. To serve:
  ```bash
