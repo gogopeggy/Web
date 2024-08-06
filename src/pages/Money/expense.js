@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import moment from "moment";
 import { getExpense } from "../../utility";
-import axios from "axios";
+import DialogData from "../../components/expense/dialogContent";
+import ExpenseDialog from "../../components/expense/dialog";
+import { crud } from "../../utility";
+import { DatePicker } from "@mui/x-date-pickers";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import moment from "moment";
-import { DatePicker } from "@mui/x-date-pickers";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Expense() {
   const location = useLocation();
@@ -27,18 +22,9 @@ export default function Expense() {
   const [overall, setOverall] = useState({});
   const [total, setTotal] = useState();
   const [date, setDate] = useState(checkDate);
-  // const url = "https://d1-tutorial.a29098477.workers.dev/api";
+  const [saveLoading, setSaveLoading] = useState(false);
   const [cashRecords, setCashRecords] = useState([]);
-  const [rowKeys, setRowKeys] = useState([]);
   const [open, setOpen] = useState(false);
-  const yearOptions = [
-    moment().format("YYYY"),
-    moment().subtract(1, "year").year(),
-  ];
-  const days = Array.from({ length: 31 }, (v, k) => k + 1);
-  const months = Array.from({ length: 12 }, (v, k) =>
-    (k + 1).toString().padStart(2, "0")
-  );
   const methods = ["cash", "credit card", "bank transfer"];
   const types = [
     "Transportation",
@@ -51,6 +37,7 @@ export default function Expense() {
     "Fixed Expense",
     "Daily",
   ];
+
   const initialRow = {
     year: moment().format("YYYY"),
     date: parseInt(moment().format("DD")),
@@ -60,7 +47,9 @@ export default function Expense() {
     type: types[0],
     note: "",
   };
+
   const [newRow, setNewRow] = useState(initialRow);
+
   const color = {
     Transportation: "#ff9595",
     Food: "#ffb944",
@@ -81,8 +70,6 @@ export default function Expense() {
   function fetchExpense() {
     getExpense().then((res) => {
       setCashRecords(res);
-      const keys = Object.keys(res[0]).filter((key) => key !== "id");
-      setRowKeys(keys);
       getOverall(curMonth, curYear, res);
     });
   }
@@ -106,13 +93,10 @@ export default function Expense() {
     sort.sort((a, b) => b[1] - a[1]);
     sort = Object.fromEntries(sort);
     setOverall(sort);
-    console.log("cashRecords", res);
     setTotal(sum);
-    //react-hooks/exhaustive-deps
   }
 
   function getMonth(e) {
-    // console.log("🚀 ~ getMonth ~ e:", e);
     setDate(e);
     setCurMonth(moment(e).format("MM"));
     setCurYear(moment(e).format("YYYY"));
@@ -122,6 +106,7 @@ export default function Expense() {
     let filter = cashRecords.filter(
       (r) => r.type === type && r.month === curMonth && r.year === curYear
     );
+    filter.sort((a, b) => a.date - b.date);
     let curDate = moment(date).format("YYYY-MM");
     navigate("/expense/details", {
       state: { data: filter, date: curDate, type: type },
@@ -129,103 +114,34 @@ export default function Expense() {
   }
 
   function handleInput(event, key) {
-    console.log("row", event.target.value, key);
     let val = event.target.value;
     let newData = { ...newRow };
-    // console.log("🚀 ~ handleInput ~ newData11111111:", newData);
     if (key === "amount") {
       val = parseInt(val) || "";
     }
     newData[key] = val;
-    // console.log("🚀 ~ handleInput ~ newData2222222:", newData);
     setNewRow(newData);
   }
 
   const handleSave = () => {
-    // console.log("newww", newRow);
-    create();
+    setSaveLoading(true);
+    crud("/expense/create", newRow, false);
     setTimeout(() => {
       fetchExpense();
+      setSaveLoading(false);
       handleClose();
     }, 2000);
   };
 
-  async function create() {
-    const url = "https://d1-tutorial.a29098477.workers.dev/api";
-    await axios
-      .post(`${url}/expense/create`, newRow, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(function (response) {
-        // console.log("res", response);
-        // handle success
-        // setCashRecords(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-      .finally(function () {
-        console.log("done");
-      });
-  }
-
-  const EditInput = (col) => {
-    let selectOp;
-    switch (col) {
-      case "year":
-        selectOp = yearOptions;
-        break;
-      case "date":
-        selectOp = days;
-        break;
-      case "month":
-        selectOp = months;
-        break;
-      case "method":
-        selectOp = methods;
-        break;
-      case "type":
-        selectOp = types;
-        break;
-      default:
-        break;
-    }
-
-    switch (col) {
-      case "year":
-      case "date":
-      case "month":
-      case "method":
-      case "type":
-        return (
-          <FormControl fullWidth>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={newRow[col] || selectOp[0]}
-              size="small"
-              sx={{ width: 200 }}
-              onChange={(e) => handleInput(e, col)}
-              MenuProps={{ PaperProps: { sx: { maxHeight: 100 } } }}
-            >
-              {selectOp.map((y) => (
-                <MenuItem value={y}>{y}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        );
-      default:
-        return (
-          <TextField
-            value={newRow[col]}
-            variant="standard"
-            size="small"
-            onChange={(e) => handleInput(e, col)}
-          />
-        );
-    }
+  const currency = (number) => {
+    return number
+      ? new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(number)
+      : "$0";
   };
 
   return (
@@ -238,25 +154,35 @@ export default function Expense() {
             format="YYYY-MM"
             onChange={(e) => getMonth(e)}
             sx={{ pr: 1 }}
+            slotProps={{ textField: { size: "small" } }}
           />
-          <Button variant="outlined" onClick={() => setOpen(true)}>
+          <Button
+            variant="outlined"
+            onClick={() => setOpen(true)}
+            endIcon={<AddIcon />}
+          >
             Add
           </Button>
         </Grid>
         <Grid item md={4} textAlign={"right"}>
-          <Typography fontWeight={"bold"}>Total Expense: ${total}</Typography>
+          <Typography fontWeight={"bold"} pt={{ md: 0, xs: 2 }} fontSize={14}>
+            Total Expense: {currency(total)}
+          </Typography>
         </Grid>
       </Grid>
-      {/* </Stack> */}
       <Grid container>
         {Object.keys(overall).map((o, index) => (
-          <Grid item md={3} p={2} key={o + index}>
+          <Grid item md={3} xs={6} p={2} key={o + index}>
             <Paper
               elevation={3}
-              sx={{ p: 1, height: 80, backgroundColor: color[o] }}
+              sx={{ p: 1, height: 70, backgroundColor: color[o] }}
             >
               <Button
-                sx={{ fontSize: 12, color: "#686868" }}
+                sx={{
+                  fontSize: 10,
+                  color: "#686868",
+                  "&.MuiButton-root:hover": { backgroundColor: "#7676761f" },
+                }}
                 onClick={() => getData(o)}
               >
                 {o}
@@ -266,57 +192,22 @@ export default function Expense() {
                 textAlign={"center"}
                 style={{ verticalAlign: "bottom" }}
               >
-                ${overall[o]}
+                {currency(overall[o])}
               </Typography>
             </Paper>
           </Grid>
         ))}
       </Grid>
-      <Dialog
+      <ExpenseDialog
         open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          <Typography textAlign={"center"} fontWeight={"bold"} fontSize={16}>
-            Create a new entry
-          </Typography>
-          <Typography color="error" textAlign={"center"}>
-            please note that amount is requried
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Grid container>
-            {rowKeys.map((c) => (
-              <Grid item md={6} key={c} alignContent={"center"} p={1}>
-                <Typography
-                  color={"text.secondary"}
-                  fontWeight={"bold"}
-                  fontSize={14}
-                >
-                  {c}
-                </Typography>
-                {EditInput(c, "create")}
-              </Grid>
-            ))}
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} variant="outlined" color="error">
-            Discard
-          </Button>
-          <Button
-            onClick={handleSave}
-            variant="outlined"
-            autoFocus
-            color="success"
-            disabled={!newRow.amount}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={handleClose}
+        title="Create a new entry"
+        subTitle="please note that amount is requried"
+        content={<DialogData row={newRow} handleInput={handleInput} />}
+        handleSave={handleSave}
+        saveLoading={saveLoading}
+        disable={!newRow.amount}
+      />
     </Box>
   );
 }

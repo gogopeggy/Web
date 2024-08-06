@@ -35,8 +35,7 @@ export default function RecipeList() {
 
   async function getRecipes() {
     const result = await axios.get(URL);
-    console.log("URL", URL);
-    setRecipes(result.data.hits); // return an array
+    setRecipes(result.data.hits);
   }
 
   const handleChange = (event) => {
@@ -67,7 +66,6 @@ export default function RecipeList() {
           sx={{ verticalAlign: "middle", pl: 1, color: "#40a0c2" }}
         />
       </Typography>
-
       <form onSubmit={onSubmit} style={{ textAlign: "center", paddingTop: 10 }}>
         <TextField
           id="outlined-basic"
@@ -77,8 +75,9 @@ export default function RecipeList() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           size="small"
+          sx={{ width: 150, pr: 1 }}
         />
-        <FormControl sx={{ width: 150 }} size="small">
+        <FormControl sx={{ width: 150, pr: 1 }} size="small">
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -93,7 +92,12 @@ export default function RecipeList() {
             ))}
           </Select>
         </FormControl>
-        <Button type="submit" variant="outlined" size="large">
+        <Button
+          type="submit"
+          variant="outlined"
+          size="large"
+          sx={{ marginRight: 1, width: 150, marginTop: { md: 0, xs: 1 } }}
+        >
           Search
         </Button>
         <Button
@@ -101,6 +105,7 @@ export default function RecipeList() {
           size="large"
           color="error"
           onClick={() => reset()}
+          sx={{ width: 150, marginTop: { md: 0, xs: 1 } }}
         >
           reset
         </Button>
