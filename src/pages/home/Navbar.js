@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "./assets/brainLogo.png";
+import logo from "../../assets/brainLogo.png";
 import Typography from "@mui/material/Typography";
 
 const Navbar = () => {

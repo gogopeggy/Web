@@ -5,13 +5,13 @@ import { useDispatch } from "react-redux";
 import { getWeather } from "./Redux/weatherSlice";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import axios from "axios";
-import Navbar from "./Navbar";
-import NotFound from "./NotFound";
-import Home from "./Home";
-import RecipeList from "./pages/recipeList";
-import Expense from "./pages/Money/expense";
-import Edit from "./pages/Money/edit";
-import Details from "./pages/Money/details";
+import Navbar from "./pages/home/Navbar";
+import NotFound from "./pages/notFound/NotFound";
+import Home from "./pages/home/Home";
+import RecipeList from "./pages/recipe/recipeList";
+import Expense from "./pages/expense/expense";
+import Edit from "./pages/expense/edit";
+import Details from "./pages/expense/details";
 
 function App() {
   const dispatch = useDispatch();
