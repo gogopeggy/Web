@@ -86,7 +86,6 @@ const EditInput = (col, row, handleInput) => {
 };
 
 const DialogData = ({ row, handleInput }) => {
-  // let renderRow = action === "update" ? Object.keys(row) : row;
   return Object.keys(row).map((c) => (
     <Grid item md={6} key={c} alignContent={"center"} p={1}>
       <Typography color={"text.secondary"} fontWeight={"bold"} fontSize={14}>

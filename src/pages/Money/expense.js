@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Expense() {
   const location = useLocation();
@@ -105,6 +106,7 @@ export default function Expense() {
     let filter = cashRecords.filter(
       (r) => r.type === type && r.month === curMonth && r.year === curYear
     );
+    filter.sort((a, b) => a.date - b.date);
     let curDate = moment(date).format("YYYY-MM");
     navigate("/expense/details", {
       state: { data: filter, date: curDate, type: type },
@@ -112,14 +114,12 @@ export default function Expense() {
   }
 
   function handleInput(event, key) {
-    // console.log("row", event.target.value, key);
     let val = event.target.value;
     let newData = { ...newRow };
     if (key === "amount") {
       val = parseInt(val) || "";
     }
     newData[key] = val;
-    // console.log("🚀 ~ handleInput ~ newData2222222:", newData);
     setNewRow(newData);
   }
 
@@ -133,6 +133,17 @@ export default function Expense() {
     }, 2000);
   };
 
+  const currency = (number) => {
+    return number
+      ? new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(number)
+      : "$0";
+  };
+
   return (
     <Box>
       <Grid container px={2}>
@@ -143,14 +154,19 @@ export default function Expense() {
             format="YYYY-MM"
             onChange={(e) => getMonth(e)}
             sx={{ pr: 1 }}
+            slotProps={{ textField: { size: "small" } }}
           />
-          <Button variant="outlined" onClick={() => setOpen(true)}>
+          <Button
+            variant="outlined"
+            onClick={() => setOpen(true)}
+            endIcon={<AddIcon />}
+          >
             Add
           </Button>
         </Grid>
         <Grid item md={4} textAlign={"right"}>
-          <Typography fontWeight={"bold"} pt={{ md: 0, xs: 2 }}>
-            Total Expense: ${total}
+          <Typography fontWeight={"bold"} pt={{ md: 0, xs: 2 }} fontSize={14}>
+            Total Expense: {currency(total)}
           </Typography>
         </Grid>
       </Grid>
@@ -159,10 +175,14 @@ export default function Expense() {
           <Grid item md={3} xs={6} p={2} key={o + index}>
             <Paper
               elevation={3}
-              sx={{ p: 1, height: 80, backgroundColor: color[o] }}
+              sx={{ p: 1, height: 70, backgroundColor: color[o] }}
             >
               <Button
-                sx={{ fontSize: 12, color: "#686868" }}
+                sx={{
+                  fontSize: 10,
+                  color: "#686868",
+                  "&.MuiButton-root:hover": { backgroundColor: "#7676761f" },
+                }}
                 onClick={() => getData(o)}
               >
                 {o}
@@ -172,7 +192,7 @@ export default function Expense() {
                 textAlign={"center"}
                 style={{ verticalAlign: "bottom" }}
               >
-                ${overall[o]}
+                {currency(overall[o])}
               </Typography>
             </Paper>
           </Grid>

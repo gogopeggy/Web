@@ -35,8 +35,7 @@ export default function RecipeList() {
 
   async function getRecipes() {
     const result = await axios.get(URL);
-    console.log("URL", URL);
-    setRecipes(result.data.hits); // return an array
+    setRecipes(result.data.hits);
   }
 
   const handleChange = (event) => {

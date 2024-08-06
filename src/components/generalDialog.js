@@ -6,16 +6,15 @@ import {
   DialogActions,
   Button,
   Typography,
-  Grid,
   CircularProgress,
 } from "@mui/material";
 
-const ExpenseDialog = ({
+const GeneralDialog = ({
   open,
   handleClose,
   title,
   subTitle,
-  content,
+  action,
   handleSave,
   saveLoading,
   disable,
@@ -30,40 +29,40 @@ const ExpenseDialog = ({
       <Typography textAlign={"center"} fontWeight={"bold"} fontSize={16}>
         {title}
       </Typography>
-      <Typography color="error" textAlign={"center"}>
-        {subTitle}
-      </Typography>
     </DialogTitle>
     <DialogContent>
-      <Grid container>{content}</Grid>
+      <Typography textAlign={"center"} fontSize={14}>
+        {subTitle}
+      </Typography>
     </DialogContent>
     <DialogActions>
-      <Button onClick={handleClose} variant="outlined" color="error">
-        Discard
+      <Button onClick={handleClose} variant="outlined" color="primary">
+        Back
       </Button>
       <Button
         onClick={handleSave}
         variant="outlined"
-        autoFocus
-        color="success"
+        color="error"
         disabled={disable}
       >
         <Typography
           sx={{
             display: !saveLoading ? undefined : "none",
-            color: disable ? "#b9b9b9" : "#38af4a",
+            color: "#d32f2f",
           }}
         >
-          Save
+          {action}
         </Typography>
         <CircularProgress
           size={24}
-          color="success"
-          sx={{ display: saveLoading ? undefined : "none" }}
+          color="error"
+          sx={{
+            display: saveLoading ? undefined : "none",
+          }}
         />
       </Button>
     </DialogActions>
   </Dialog>
 );
 
-export default ExpenseDialog;
+export default GeneralDialog;

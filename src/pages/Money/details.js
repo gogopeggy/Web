@@ -3,16 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getExpense } from "../../utility";
 import ExpenseDialog from "../../components/expense/dialog";
 import DialogData from "../../components/expense/dialogContent";
+import GeneralDialog from "../../components/generalDialog";
 import { crud } from "../../utility";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -25,12 +19,20 @@ export default function Details() {
   const [curRow, setCurRow] = useState({});
   const curType = location.state.type;
   const [saveLoading, setSaveLoading] = useState(false);
+  const [deleteLoding, setDeleteLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [rows, setRows] = useState(location.state.data);
   const handleClose = () => {
     setOpen(false);
-    setCurRow({});
+    setTimeout(() => {
+      setCurRow({});
+    }, 1500);
   };
-  const [rows, setRows] = useState(location.state.data);
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
+
   const columns = [
     {
       field: "action",
@@ -61,19 +63,19 @@ export default function Details() {
     {
       field: "year",
       headerName: "Year",
-      width: 60,
+      width: 70,
       editable: true,
     },
     {
       field: "month",
       headerName: "Month",
-      width: 60,
+      width: 70,
       editable: true,
     },
     {
       field: "date",
       headerName: "Date",
-      width: 50,
+      width: 70,
       editable: true,
     },
     {
@@ -108,14 +110,12 @@ export default function Details() {
   }
 
   function handleInput(event, key) {
-    // console.log("row", event.target.value, key);
     let val = event.target.value;
     let newData = { ...curRow };
     if (key === "amount") {
       val = parseInt(val) || "";
     }
     newData[key] = val;
-    // console.log("🚀 ~ handleInput ~ newData2222222:", newData);
     setCurRow(newData);
   }
 
@@ -142,9 +142,11 @@ export default function Details() {
   };
 
   const handleDelete = async () => {
+    setDeleteLoading(true);
     await crud("/expense/delete", { id: curRow.id }, true);
     setTimeout(() => {
       fetchExpense();
+      setDeleteLoading(false);
       setDeleteOpen(false);
     }, 2000);
   };
@@ -154,14 +156,18 @@ export default function Details() {
       <Box>
         <Button
           variant="outlined"
+          size="small"
           onClick={() => navigate("/expense", { state: { date: curMonth } })}
         >
           Back
         </Button>
       </Box>
-      <Box sx={{ height: 400, width: "100%", pt: 2 }}>
+      <Box sx={{ height: 380, width: "100%", pt: 1 }}>
         <DataGrid
           rows={rows}
+          columnHeaderHeight={45}
+          editMode={false}
+          rowHeight={45}
           columns={columns}
           initialState={{
             pagination: {
@@ -173,6 +179,7 @@ export default function Details() {
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
           disableColumnResize
+          disableColumnMenu
         />
       </Box>
       <ExpenseDialog
@@ -185,40 +192,16 @@ export default function Details() {
         saveLoading={saveLoading}
         disable={!curRow.amount}
       />
-      <Dialog
+      <GeneralDialog
         open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          <Typography textAlign={"center"} fontWeight={"bold"} fontSize={16}>
-            This is going to delete this entry
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Typography textAlign={"center"} fontSize={14}>
-            Are you sure?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteOpen(false)}
-            variant="outlined"
-            color="primary"
-          >
-            Back
-          </Button>
-          <Button
-            onClick={handleDelete}
-            variant="outlined"
-            autoFocus
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={handleDeleteClose}
+        title={"This is going to delete this entry"}
+        subTitle={"Are you sure?"}
+        action={"Delete"}
+        handleSave={handleDelete}
+        saveLoading={deleteLoding}
+        disable={false}
+      />
     </Box>
   );
 }
