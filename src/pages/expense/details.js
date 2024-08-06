@@ -92,7 +92,7 @@ export default function Details() {
     },
     {
       field: "amount",
-      headerName: "Amount",
+      headerName: "$Amount",
       width: 80,
       editable: true,
     },
@@ -121,12 +121,13 @@ export default function Details() {
 
   const fetchExpense = () => {
     getExpense().then((res) => {
-      const update = res.filter(
+      let update = res.filter(
         (f) =>
           f.year === curMonth.split("-")[0] &&
           f.month === curMonth.split("-")[1] &&
           f.type === curType
       );
+      update.sort((a, b) => a.date - b.date);
       setRows(update);
     });
   };
