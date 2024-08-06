@@ -1,27 +1,24 @@
-# Custom Datepicker Component
-This is a simple React datepicker component built without using any third-party libraries. The datepicker allows users to select a start date and an end date, with specific behaviors based on the selected dates. The component also highlights the current day with a yellow background and displays month navigation buttons that are disabled.
+# A personal ideas hub
+This web application provides two main features:
+
+Recipe Search: Allows users to search for recipes based on ingredients and preferences.
+Expense Management: Enables users to record, update, delete personal expenses, and view overall statistics by month.
 ## Features
-1. **Start and End Date Selection:**
-   - First click sets the start date.
-   - Second click sets the end date if it is the same or later than the start date.
-   - Clicking a date earlier than the start date resets the start date.
+1. **Recipe Search**
+    - Ingredient-based Search: Enter ingredients you have on hand to find suitable recipes.
+    - Preference Filtering: Specify your dietary preferences (e.g., vegetarian, vegan, gluten-free) to get tailored recipe recommendations.
 
-2. **Non-Current Month Days:**
-   - Show a not-allowed icon when hovering over non-current month days.
-   - Disable click on non-current month days.
-
-3. **Current Month Display:**
-   - Shows the current month and year at the top.
-   - Month navigation buttons (previous and next) are displayed but disabled.
-
-4. **Current Day Highlight:**
-   - Highlights the current day with a yellow background.
+2. **Expense Management**
+   - Create Expense: Add new expenses by specifying the amount, type, and date.
+   - Update Expense: Modify details of existing expenses.
+   - Delete Expense: Remove expenses from your record.
+   - Monthly Statistics: View an overview of your expenses categorized by month to help manage your finances.
 
 ## Installation and Setup Instructions
 To use this component in your project, follow these steps:
 1. Clone the repository or copy the component files into your project.
 ```bash
-git clone https://github.com/gogopeggy/first-build.git
+git clone https://github.com/gogopeggy/Web.git
 cd first-build
 ```
 2. Installation:
