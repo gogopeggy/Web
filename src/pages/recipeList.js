@@ -28,8 +28,8 @@ export default function RecipeList() {
     "alcohol-free",
   ];
 
-  const ID = process.env.REACT_APP_API_ID;
-  const KEY = process.env.REACT_APP_API_KEY;
+  const ID = "36954fea";
+  const KEY = "9918eeea4ae318b8c41da2d66fd50202";
 
   const URL = `https://api.edamam.com/search?q=${query}&app_id=${ID}&app_key=${KEY}&health=${healthLabels}`;
 
