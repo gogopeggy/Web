@@ -10,7 +10,6 @@ import NotFound from "./pages/notFound/NotFound";
 import Home from "./pages/home/Home";
 import RecipeList from "./pages/recipe/recipeList";
 import Expense from "./pages/expense/expense";
-import Edit from "./pages/expense/edit";
 import Details from "./pages/expense/details";
 
 function App() {
@@ -47,7 +46,6 @@ function App() {
               <Route path="*" element={<NotFound />}></Route>
               <Route path="/recipe" element={<RecipeList />}></Route>
               <Route path="/expense" element={<Expense />}></Route>
-              <Route path="/expense/edit" element={<Edit />}></Route>
               <Route path="/expense/details" element={<Details />}></Route>
             </Routes>
           </div>
