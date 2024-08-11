@@ -11,6 +11,7 @@ import Home from "./pages/home/Home";
 import RecipeList from "./pages/recipe/recipeList";
 import Expense from "./pages/expense/expense";
 import Details from "./pages/expense/details";
+import Camping from "./pages/camping/camping";
 
 function App() {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ function App() {
               <Route path="/recipe" element={<RecipeList />}></Route>
               <Route path="/expense" element={<Expense />}></Route>
               <Route path="/expense/details" element={<Details />}></Route>
+              <Route path="/camping" element={<Camping />}></Route>
             </Routes>
           </div>
         </div>
