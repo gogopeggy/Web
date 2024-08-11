@@ -31,7 +31,7 @@ export default function Mapbox() {
   }, [marker]);
 
   return (
-    <APIProvider apiKey={"AIzaSyAHtk1J6egQrl9ap81rAvQX0oB9NZfIh10"}>
+    <APIProvider apiKey={""}>
       <Map
         // zoom={12}
         style={{ width: "60vw", height: "70vh" }}
