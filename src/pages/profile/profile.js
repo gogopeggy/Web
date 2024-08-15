@@ -34,7 +34,7 @@ const Profile = () => {
 
   return (
     <div style={{ height: "100vh", width: "100%" }}>
-      <p>{user}</p>
+      <p>{`Hi ${user}, please check my profile below:`}</p>
       <iframe
         src={profileFile}
         width="100%"
