@@ -8,7 +8,7 @@ const Profile = () => {
   useEffect(() => {
     console.log("LIFF_ID", LIFF_ID);
     liff
-      .init({ liffId: LIFF_ID })
+      .init({ liffId: "2006066572-J30jR9kB" })
       .then(() => {
         console.log("LIFF initialized");
         getUser();
