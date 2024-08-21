@@ -22,6 +22,10 @@
   margin-left: auto;
 }
 
+.navactive {
+  color: #4cdce9 !important;
+}
+
 .navbar a {
   margin-left: 16px;
   text-decoration: none;
@@ -31,7 +35,7 @@
 }
 
 .navbar a:hover {
-  color: #4cdde9;
+  color: #4cdce9;
 }
 
 .content {
