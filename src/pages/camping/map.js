@@ -12,13 +12,14 @@ export default function Mapbox() {
   const [curLng, setCurLng] = useState();
   const [curLat, setCurLat] = useState();
   const [distance, setDistance] = useState();
+  const [duration, setDuration] = useState();
   const [destination, setDestination] = useState("");
   const locations = [
     {
       lat: 25.0410887583241,
       lng: 121.5203191419131,
-      name: "中正紀年堂",
-      address: "中正紀年堂123456",
+      name: "中正紀念堂",
+      address: "中正紀念堂123456",
       spot: 12,
     },
     {
@@ -102,9 +103,11 @@ export default function Mapbox() {
     try {
       const response = await axios.get(url);
       const result = response.data;
-      const distanceInMeters = result.rows[0].elements[0].distance.value;
-      // console.log("🚀distanceInMeters:", distanceInMeters);
-      setDistance(JSON.stringify(distanceInMeters));
+      const distanceInMeters = result.rows[0].elements[0].distance.text;
+      const time = result.rows[0].elements[0].duration.text;
+      setDuration(time);
+      // console.log("result:", result);
+      setDistance(distanceInMeters);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -133,7 +136,8 @@ export default function Mapbox() {
     <>
       <Box display={destination === "" ? "none" : undefined}>
         <Typography>From your location to : {destination}</Typography>
-        <Typography>Distance : {Math.round(distance / 1000)}km</Typography>
+        <Typography>Distance : {distance}</Typography>
+        <Typography>About : {duration} drive</Typography>
       </Box>
       <APIProvider apiKey={Key}>
         <Map
