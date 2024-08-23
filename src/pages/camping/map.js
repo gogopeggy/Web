@@ -266,7 +266,7 @@ export default function Mapbox() {
           defaultTilt={20}
           defaultZoom={6}
           style={{ width: "67vw", height: "70vh" }}
-          center={{
+          defaultCenter={{
             lat: curCity === "" ? 25.0410887583241 : filteredLocation[0].lat,
             lng: curCity === "" ? 120.9605 : filteredLocation[0].lng,
           }}
