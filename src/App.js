@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { useDispatch } from "react-redux";
@@ -12,13 +12,40 @@ import RecipeList from "./pages/recipe/recipeList";
 import Expense from "./pages/expense/expense";
 import Details from "./pages/expense/details";
 import Camping from "./pages/camping/camping";
+import Profile from "./pages/profile/profile";
+import liff from "@line/liff";
+
 
 function App() {
   const dispatch = useDispatch();
+  const [user, setUser] = useState();
   useEffect(() => {
     fetchWeather();
+    if (window.location.pathname === "/profile") {
+      liff
+        .init({ liffId: "2006066572-J30jR9kB" })
+        .then(() => {
+          console.log("LIFF initialized");
+          getUser();
+        })
+        .catch((err) => {
+          console.error("LIFF Initialization failed", err);
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getUser = () => {
+    liff
+      .getProfile()
+      .then((profile) => {
+        const name = profile.displayName;
+        setUser(name);
+      })
+      .catch((err) => {
+        console.log("get profile error", err);
+      });
+  };
 
   function fetchWeather() {
     axios
@@ -40,7 +67,7 @@ function App() {
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <BrowserRouter>
         <div className="App">
-          <Navbar />
+          {window.location.pathname === "/profile" ? null : <Navbar />}
           <div className="content">
             <Routes>
               <Route exact path="/" element={<Home />}></Route>
@@ -49,6 +76,7 @@ function App() {
               <Route path="/expense" element={<Expense />}></Route>
               <Route path="/expense/details" element={<Details />}></Route>
               <Route path="/camping" element={<Camping />}></Route>
+              <Route path="/profile" element={<Profile user={user} />}></Route>
             </Routes>
           </div>
         </div>
