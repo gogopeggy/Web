@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
-// import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
+import { getCamping } from "../../utility";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -13,7 +12,6 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 
 export default function Mapbox() {
-  // const [markerRef, marker] = useMarkerRef();
   const Key = process.env.REACT_APP_API_MAPS;
   const [curLng, setCurLng] = useState();
   const [curLat, setCurLat] = useState();
@@ -22,6 +20,7 @@ export default function Mapbox() {
   const [duration, setDuration] = useState();
   const [destination, setDestination] = useState("");
   const [curCity, setCurCity] = useState("");
+  const [locations, setLocations] = useState([]);
 
   const handleChange = (event) => {
     setCurCity(event.target.value);
@@ -31,123 +30,123 @@ export default function Mapbox() {
     });
   };
 
-  const locations = [
-    {
-      lat: 25.0410887583241,
-      lng: 121.5203191419131,
-      name: "中正紀念堂",
-      address: "100台北市中正區中山南路21號",
-      city: "台北市",
-      spot: 12,
-    },
-    {
-      lat: 25.092942603441546,
-      lng: 121.525899341745761,
-      name: "士林捷運站",
-      address: "111台北市士林區福德路1號",
-      city: "台北市",
-      spot: 18,
-    },
-    {
-      lat: 25.091854377536897,
-      lng: 121.56812803669244,
-      name: "金面山步道",
-      address: "114台北市內湖區環山路一段136巷底號",
-      city: "台北市",
-      spot: 20,
-    },
-    {
-      lat: 25.05453792265606,
-      lng: 121.59782545224441,
-      name: "台北流行音樂中心",
-      address: "115台北市南港區市民大道八段99號",
-      city: "台北市",
-      spot: 40,
-    },
-    {
-      lat: 25.02887626611717,
-      lng: 121.4529432588325,
-      name: "板橋藝文特區",
-      address: "220新北市板橋區中正路435號",
-      city: "新北市",
-      spot: 33,
-    },
-    {
-      lat: 25.001847196692243,
-      lng: 121.58140718430352,
-      name: "台北市立動物園",
-      address: "116台北市文山區新光路二段30號",
-      city: "台北市",
-      spot: 22,
-    },
-    {
-      lat: 23.003804245607544,
-      lng: 120.16124013732555,
-      name: "安平老街",
-      address: "708台南市安平區延平街",
-      city: "台南市",
-      spot: 37,
-    },
-    {
-      lat: 24.840706236985522,
-      lng: 121.25663520216912,
-      name: "三坑自然生態公園",
-      address: "325桃園市龍潭區",
-      city: "桃園市",
-      spot: 37,
-    },
-    {
-      lat: 24.871505786270422,
-      lng: 121.25597165867062,
-      name: "落羽松大道",
-      address: "335桃園市大溪區落羽松路",
-      city: "桃園市",
-      spot: 37,
-    },
-    {
-      lat: 24.772221710558703,
-      lng: 121.10516189496242,
-      name: "小森之歌",
-      address: "307新竹縣芎林鄉倒別牛23號",
-      city: "新竹縣",
-      spot: 37,
-    },
-    {
-      lat: 24.81197776341848,
-      lng: 121.04062748744002,
-      name: "高鐵新竹站",
-      address: "302新竹縣竹北市高鐵七路6號",
-      city: "新竹縣",
-      spot: 37,
-    },
-    {
-      lat: 24.16618098917034,
-      lng: 120.64901746593382,
-      name: "臺中國家歌劇院",
-      address: "407025台中市西屯區惠來路二段101號",
-      city: "台中市",
-      spot: 37,
-    },
-    {
-      lat: 23.95086157682222,
-      lng: 120.45160561387692,
-      name: "二林東螺溪木棉花道",
-      address: "526彰化縣二林鎮華崙里",
-      city: "彰化縣",
-      spot: 37,
-    },
-    {
-      lat: 23.266532674982802,
-      lng: 120.33968378337353,
-      name: "德元埤荷蘭村",
-      address: "736台南市柳營區100號",
-      city: "台南市",
-      spot: 37,
-    },
-  ];
+  // const locations = [
+  //   {
+  //     lat: 25.0410887583241,
+  //     lng: 121.5203191419131,
+  //     name: "中正紀念堂",
+  //     address: "100台北市中正區中山南路21號",
+  //     city: "台北市",
+  //     spot: 12,
+  //   },
+  //   {
+  //     lat: 25.092942603441546,
+  //     lng: 121.525899341745761,
+  //     name: "士林捷運站",
+  //     address: "111台北市士林區福德路1號",
+  //     city: "台北市",
+  //     spot: 18,
+  //   },
+  //   {
+  //     lat: 25.091854377536897,
+  //     lng: 121.56812803669244,
+  //     name: "金面山步道",
+  //     address: "114台北市內湖區環山路一段136巷底號",
+  //     city: "台北市",
+  //     spot: 20,
+  //   },
+  //   {
+  //     lat: 25.05453792265606,
+  //     lng: 121.59782545224441,
+  //     name: "台北流行音樂中心",
+  //     address: "115台北市南港區市民大道八段99號",
+  //     city: "台北市",
+  //     spot: 40,
+  //   },
+  //   {
+  //     lat: 25.02887626611717,
+  //     lng: 121.4529432588325,
+  //     name: "板橋藝文特區",
+  //     address: "220新北市板橋區中正路435號",
+  //     city: "新北市",
+  //     spot: 33,
+  //   },
+  //   {
+  //     lat: 25.001847196692243,
+  //     lng: 121.58140718430352,
+  //     name: "台北市立動物園",
+  //     address: "116台北市文山區新光路二段30號",
+  //     city: "台北市",
+  //     spot: 22,
+  //   },
+  //   {
+  //     lat: 23.003804245607544,
+  //     lng: 120.16124013732555,
+  //     name: "安平老街",
+  //     address: "708台南市安平區延平街",
+  //     city: "台南市",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 24.840706236985522,
+  //     lng: 121.25663520216912,
+  //     name: "三坑自然生態公園",
+  //     address: "325桃園市龍潭區",
+  //     city: "桃園市",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 24.871505786270422,
+  //     lng: 121.25597165867062,
+  //     name: "落羽松大道",
+  //     address: "335桃園市大溪區落羽松路",
+  //     city: "桃園市",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 24.772221710558703,
+  //     lng: 121.10516189496242,
+  //     name: "小森之歌",
+  //     address: "307新竹縣芎林鄉倒別牛23號",
+  //     city: "新竹縣",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 24.81197776341848,
+  //     lng: 121.04062748744002,
+  //     name: "高鐵新竹站",
+  //     address: "302新竹縣竹北市高鐵七路6號",
+  //     city: "新竹縣",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 24.16618098917034,
+  //     lng: 120.64901746593382,
+  //     name: "臺中國家歌劇院",
+  //     address: "407025台中市西屯區惠來路二段101號",
+  //     city: "台中市",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 23.95086157682222,
+  //     lng: 120.45160561387692,
+  //     name: "二林東螺溪木棉花道",
+  //     address: "526彰化縣二林鎮華崙里",
+  //     city: "彰化縣",
+  //     spot: 37,
+  //   },
+  //   {
+  //     lat: 23.266532674982802,
+  //     lng: 120.33968378337353,
+  //     name: "德元埤荷蘭村",
+  //     address: "736台南市柳營區100號",
+  //     city: "台南市",
+  //     spot: 37,
+  //   },
+  // ];
 
   const city = [...new Set(locations.map((l) => l.city))];
-  const [filteredLocation, setFilteredLocation] = useState(locations);
+  const [filteredLocation, setFilteredLocation] = useState([]);
 
   const bounds = {
     north: 28.5,
@@ -176,6 +175,13 @@ export default function Mapbox() {
 
   function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  function fetchCamping() {
+    getCamping().then((res) => {
+      setLocations(res);
+      setFilteredLocation(res);
+    });
   }
 
   const calculateDistance = async (des) => {
@@ -215,6 +221,7 @@ export default function Mapbox() {
         enableHighAccuracy: true,
       });
     }
+    fetchCamping();
   }, []);
 
   return (
