@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
 export default function Mapbox() {
   const Key = process.env.REACT_APP_API_MAPS;
@@ -28,6 +29,12 @@ export default function Mapbox() {
       let opt = locations.filter((f) => f.city === event.target.value);
       return opt;
     });
+  };
+
+  const clearCity = () => {
+    setCurCity("");
+    setFilteredLocation(locations);
+    setDestination("");
   };
 
   // const locations = [
@@ -227,27 +234,31 @@ export default function Mapbox() {
   return (
     <>
       <Grid container>
-        <Grid item md={6}>
-          <Box display={destination === "" ? "none" : undefined}>
-            <Stack direction={"row"}>
-              <Typography pr={2} fontWeight={"bold"} fontSize={14}>
-                From your location to :
-              </Typography>
-              <Typography> {destination}</Typography>
-            </Stack>
-            <Stack direction={"row"}>
-              <Typography pr={2} fontWeight={"bold"} fontSize={14}>
-                Distance :
-              </Typography>
-              <Typography fontSize={14}>
-                {distance}
-                {`(about ${duration} dirve)`}
-              </Typography>
-            </Stack>
-          </Box>
+        <Grid item md={6} xs={6}>
+          {destination ? (
+            <>
+              <Stack direction={"row"}>
+                <Typography pr={2} fontWeight={"bold"} fontSize={14}>
+                  From your location to :
+                </Typography>
+                <Typography> {destination}</Typography>
+              </Stack>
+              <Stack direction={"row"}>
+                <Typography pr={2} fontWeight={"bold"} fontSize={14}>
+                  Distance :
+                </Typography>
+                <Typography fontSize={14}>
+                  {distance}
+                  {`(about ${duration} dirve)`}
+                </Typography>
+              </Stack>
+            </>
+          ) : (
+            <Box>Let's find a place!</Box>
+          )}
         </Grid>
-        <Grid item md={6} textAlign={"-webkit-right"}>
-          <Box sx={{ width: 120 }} pb={2}>
+        <Grid item md={6} xs={6} textAlign={"-webkit-right"}>
+          <Stack sx={{ width: { md: 200, xs: 180 } }} pb={2} direction="row">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label" sx={{ fontSize: 12 }}>
                 Camping city
@@ -265,14 +276,15 @@ export default function Mapbox() {
                 ))}
               </Select>
             </FormControl>
-          </Box>
+            <Button onClick={clearCity}>clear</Button>
+          </Stack>
         </Grid>
       </Grid>
       <APIProvider apiKey={Key}>
         <Map
           defaultTilt={20}
           defaultZoom={6}
-          style={{ width: "67vw", height: "70vh" }}
+          style={{ width: "100%", height: "70vh" }}
           defaultCenter={{
             lat: curCity === "" ? 25.0410887583241 : filteredLocation[0].lat,
             lng: curCity === "" ? 120.9605 : filteredLocation[0].lng,
