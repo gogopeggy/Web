@@ -53,3 +53,20 @@ export async function crud(path, data, remove) {
       });
   }
 }
+
+export async function getCamping() {
+  let res;
+  const url = "https://d1-tutorial.a29098477.workers.dev/api";
+  await axios
+    .get(`${url}/camping`)
+    .then(function (response) {
+      res = response.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      console.log("done");
+    });
+  return res;
+}
