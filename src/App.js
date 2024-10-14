@@ -15,7 +15,6 @@ import Camping from "./pages/camping/camping";
 import Profile from "./pages/profile/profile";
 import liff from "@line/liff";
 
-
 function App() {
   const dispatch = useDispatch();
   const [user, setUser] = useState();
