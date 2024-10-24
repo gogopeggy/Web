@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 export default function Camping() {
-  const Key = process.env.REACT_APP_API_MAPS;
+  // const Key = process.env.REACT_APP_API_MAPS;
   const [curLng, setCurLng] = useState();
   const [curLat, setCurLat] = useState();
   const [distance, setDistance] = useState();
@@ -158,7 +158,7 @@ export default function Camping() {
           </Stack>
         </Grid>
       </Grid>
-      <APIProvider apiKey={Key}>
+      <APIProvider apiKey={"AIzaSyBG8bp1UOEJayWQMSlD3UaBvy7BuqDqhQM"}>
         <Map
           defaultTilt={20}
           defaultZoom={6}
