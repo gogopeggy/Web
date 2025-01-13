@@ -17,6 +17,10 @@ This web application provides two main features:
    - Update Expense: Modify details of existing expenses.
    - Delete Expense: Remove expenses from your record.
    - Monthly Statistics: View an overview of your expenses categorized by month to help manage your finances.
+3. **Camping Site Search**
+   - Search for camping site in Taiwan.
+   - Filter by cities.
+   - Calculate travel time to desired location.
 
 ## Installation and Setup Instructions
 To use this component in your project, follow these steps:
