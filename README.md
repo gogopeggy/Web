@@ -1,7 +1,7 @@
 # A personal ideas hub
 ![image](https://github.com/user-attachments/assets/720fddc7-2847-44b6-9166-31ba53db62ce)
 ![image](https://github.com/user-attachments/assets/800756bd-591a-4907-a7be-064683f98428)
-![image](https://github.com/user-attachments/assets/db474421-60ed-4315-a8c0-1d00ce6425b9)
+![image](https://github.com/user-attachments/assets/a7e70bd0-4fee-4d99-a9fd-1b6de4d040a2)
 
 This web application provides two main features:
 
