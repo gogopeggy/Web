@@ -1,12 +1,16 @@
 # A personal ideas hub
 ![image](https://github.com/user-attachments/assets/0d66b584-3fc1-4ad5-bd3d-7e2f035f6853)
 ![image](https://github.com/user-attachments/assets/42984403-f769-4b57-982d-47abd8dfd7f2)
+![image](https://github.com/user-attachments/assets/db474421-60ed-4315-a8c0-1d00ce6425b9)
 
 This web application provides two main features:
 
 **Recipe Search:** Allows users to search for recipes based on ingredients and preferences.
 
 **Expense Management:** Enables users to record, update, delete personal expenses, and view overall statistics by month.
+
+**Camping Site Search** Allow users to search camping sites by cities and estimate traveling time.
+
 ## Features
 1. **Recipe Search**
     - Ingredient-based Search: Enter ingredients you have on hand to find suitable recipes.
@@ -20,7 +24,7 @@ This web application provides two main features:
 3. **Camping Site Search**
    - Search for camping site in Taiwan.
    - Filter by cities.
-   - Calculate travel time to desired location.
+   - Estimate traveling time to desired location.
 
 ## Installation and Setup Instructions
 To use this component in your project, follow these steps:
