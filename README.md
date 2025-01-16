@@ -22,7 +22,7 @@ This web application provides two main features:
    - Delete Expense: Remove expenses from your record.
    - Monthly Statistics: View an overview of your expenses categorized by month to help manage your finances.
 3. **Camping Site Search**
-   - Search for camping site in Taiwan.
+   - Search for camping sites in Taiwan.
    - Filter by cities.
    - Estimate traveling time to desired location.
 
