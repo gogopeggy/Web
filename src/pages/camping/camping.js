@@ -111,8 +111,8 @@ export default function Camping() {
 
   return (
     <>
-      <Grid container>
-        <Grid item md={6} xs={6}>
+      <Grid container spacing={1}>
+        <Grid item md={6} xs={12}>
           {destination ? (
             <>
               <Stack direction={"row"}>
@@ -135,8 +135,8 @@ export default function Camping() {
             <Box>Let's find a place!</Box>
           )}
         </Grid>
-        <Grid item md={6} xs={6} textAlign={"-webkit-right"}>
-          <Stack sx={{ width: { md: 200, xs: 180 } }} pb={2} direction="row">
+        <Grid item md={6} xs={12} sx={{ textAlign: { md: "right", xs: "left" } }}>
+          <Stack sx={{ width: { md: 240, xs: "100%" }, maxWidth: 320, display: "inline-flex" }} pb={2} direction="row">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label" sx={{ fontSize: 12 }}>
                 Camping city

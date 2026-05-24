@@ -65,7 +65,17 @@ export default function RecipeList() {
           sx={{ verticalAlign: "middle", pl: 1, color: "#40a0c2" }}
         />
       </Typography>
-      <form onSubmit={onSubmit} style={{ textAlign: "center", paddingTop: 10 }}>
+      <Box
+        component="form"
+        onSubmit={onSubmit}
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: 1,
+          pt: 1,
+        }}
+      >
         <TextField
           id="outlined-basic"
           variant="outlined"
@@ -74,9 +84,9 @@ export default function RecipeList() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           size="small"
-          sx={{ width: 150, pr: 1 }}
+          sx={{ flex: "1 1 150px", maxWidth: 240, minWidth: 140 }}
         />
-        <FormControl sx={{ width: 150, pr: 1 }} size="small">
+        <FormControl sx={{ flex: "1 1 150px", maxWidth: 240, minWidth: 140 }} size="small">
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -95,7 +105,7 @@ export default function RecipeList() {
           type="submit"
           variant="outlined"
           size="large"
-          sx={{ marginRight: 1, width: 150, marginTop: { md: 0, xs: 1 } }}
+          sx={{ flex: "1 1 140px", maxWidth: 200, minWidth: 120 }}
         >
           Search
         </Button>
@@ -104,20 +114,20 @@ export default function RecipeList() {
           size="large"
           color="error"
           onClick={() => reset()}
-          sx={{ width: 150, marginTop: { md: 0, xs: 1 } }}
+          sx={{ flex: "1 1 140px", maxWidth: 200, minWidth: 120 }}
         >
           reset
         </Button>
-      </form>
+      </Box>
       <Box>
         <Grid container>
           {recipes.map((recipe) => {
             return (
-              <Grid item md={4} p={2} textAlign={"center"}>
+              <Grid item xs={12} sm={6} md={4} p={2} textAlign={"center"}>
                 <img
                   className="img"
                   src={recipe["recipe"]["image"]}
-                  width={230}
+                  style={{ width: "100%", maxWidth: 230, height: "auto" }}
                   onClick={() => window.open(recipe["recipe"]["url"])}
                   alt={recipe["recipe"]["label"]}
                 />
