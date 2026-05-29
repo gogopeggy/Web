@@ -169,7 +169,7 @@ export function validateBooking(value) {
 	const errors = {};
 	if (!value.name || !value.name.trim()) errors.name = '請輸入姓名';
 	if (!value.phone || !value.phone.trim()) errors.phone = '請輸入聯絡電話';
-	else if (!/^[\d\s()+\-]{8,}$/.test(value.phone.trim()))
+	else if (!/^[\d\s()+-]{8,}$/.test(value.phone.trim()))
 		errors.phone = '電話格式不正確';
 	if (value.email && value.email.trim()) {
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email.trim()))
