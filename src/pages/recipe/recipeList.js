@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 export default function RecipeList() {
-  const [query, setQuery] = useState(" ");
+  const [query, setQuery] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [healthLabels, setHealthLabels] = useState("vegan");
   const labels = [

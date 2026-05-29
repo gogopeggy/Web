@@ -81,12 +81,19 @@ export default function Camping() {
     try {
       const response = await axios.get(url);
       const result = response.data;
-      const distanceInMeters = result.rows[0].elements[0].distance.text;
-      const time = result.rows[0].elements[0].duration.text;
-      setDuration(time);
-      setDistance(distanceInMeters);
+      if (result.status !== "OK") {
+        throw new Error(result.error_message || `Distance API status: ${result.status}`);
+      }
+      const element = result.rows?.[0]?.elements?.[0];
+      if (!element || element.status !== "OK") {
+        throw new Error(`No route found (${element?.status || "no data"})`);
+      }
+      setDuration(element.duration.text);
+      setDistance(element.distance.text);
     } catch (error) {
       console.error("Error fetching data: ", error);
+      setDistance(undefined);
+      setDuration(undefined);
     }
   };
 
