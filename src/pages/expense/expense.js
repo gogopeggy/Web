@@ -146,26 +146,27 @@ export default function Expense() {
 
   return (
     <Box>
-      <Grid container px={2}>
-        <Grid item md={8}>
-          <DatePicker
-            views={["year", "month"]}
-            value={date}
-            format="YYYY-MM"
-            onChange={(e) => getMonth(e)}
-            sx={{ pr: 1 }}
-            slotProps={{ textField: { size: "small" } }}
-          />
-          <Button
-            variant="outlined"
-            onClick={() => setOpen(true)}
-            endIcon={<AddIcon />}
-          >
-            Add
-          </Button>
+      <Grid container px={{ xs: 1, sm: 2 }} spacing={1} alignItems="center">
+        <Grid item xs={12} md={8}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <DatePicker
+              views={["year", "month"]}
+              value={date}
+              format="YYYY-MM"
+              onChange={(e) => getMonth(e)}
+              slotProps={{ textField: { size: "small" } }}
+            />
+            <Button
+              variant="outlined"
+              onClick={() => setOpen(true)}
+              endIcon={<AddIcon />}
+            >
+              Add
+            </Button>
+          </Box>
         </Grid>
-        <Grid item md={4} textAlign={"right"}>
-          <Typography fontWeight={"bold"} pt={{ md: 0, xs: 2 }} fontSize={14}>
+        <Grid item xs={12} md={4} sx={{ textAlign: { xs: "left", md: "right" } }}>
+          <Typography fontWeight={"bold"} fontSize={14}>
             Total Expense: {currency(total)}
           </Typography>
         </Grid>

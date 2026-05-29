@@ -81,12 +81,19 @@ export default function Camping() {
     try {
       const response = await axios.get(url);
       const result = response.data;
-      const distanceInMeters = result.rows[0].elements[0].distance.text;
-      const time = result.rows[0].elements[0].duration.text;
-      setDuration(time);
-      setDistance(distanceInMeters);
+      if (result.status !== "OK") {
+        throw new Error(result.error_message || `Distance API status: ${result.status}`);
+      }
+      const element = result.rows?.[0]?.elements?.[0];
+      if (!element || element.status !== "OK") {
+        throw new Error(`No route found (${element?.status || "no data"})`);
+      }
+      setDuration(element.duration.text);
+      setDistance(element.distance.text);
     } catch (error) {
       console.error("Error fetching data: ", error);
+      setDistance(undefined);
+      setDuration(undefined);
     }
   };
 
@@ -111,8 +118,8 @@ export default function Camping() {
 
   return (
     <>
-      <Grid container>
-        <Grid item md={6} xs={6}>
+      <Grid container spacing={1}>
+        <Grid item md={6} xs={12}>
           {destination ? (
             <>
               <Stack direction={"row"}>
@@ -135,8 +142,8 @@ export default function Camping() {
             <Box>Let's find a place!</Box>
           )}
         </Grid>
-        <Grid item md={6} xs={6} textAlign={"-webkit-right"}>
-          <Stack sx={{ width: { md: 200, xs: 180 } }} pb={2} direction="row">
+        <Grid item md={6} xs={12} sx={{ textAlign: { md: "right", xs: "left" } }}>
+          <Stack sx={{ width: { md: 240, xs: "100%" }, maxWidth: 320, display: "inline-flex" }} pb={2} direction="row">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label" sx={{ fontSize: 12 }}>
                 Camping city
@@ -158,7 +165,7 @@ export default function Camping() {
           </Stack>
         </Grid>
       </Grid>
-      <APIProvider apiKey={"AIzaSyBG8bp1UOEJayWQMSlD3UaBvy7BuqDqhQM"}>
+      <APIProvider apiKey={"AIzaSyBj42eds2YwcjtjPyUwH5q6PB4UWGMFtWM"}>
         <Map
           defaultTilt={20}
           defaultZoom={6}

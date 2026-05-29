@@ -62,7 +62,6 @@ const EditInput = (col, row, handleInput) => {
             id="demo-simple-select"
             value={row[col] || selectOp[0]}
             size="small"
-            sx={{ width: 200 }}
             onChange={(e) => handleInput(e, col)}
             MenuProps={{ PaperProps: { sx: { maxHeight: 100 } } }}
           >
@@ -87,7 +86,7 @@ const EditInput = (col, row, handleInput) => {
 
 const DialogData = ({ row, handleInput }) => {
   return Object.keys(row).map((c) => (
-    <Grid item md={6} key={c} alignContent={"center"} p={1}>
+    <Grid item xs={12} sm={6} key={c} alignContent={"center"} p={1}>
       <Typography color={"text.secondary"} fontWeight={"bold"} fontSize={14}>
         {c}
       </Typography>
