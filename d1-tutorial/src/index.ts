@@ -16,6 +16,7 @@ var corsHeaders = {
 export interface Env {
   DB: D1Database;
   RESEND_API_KEY: string;
+  GOOGLE_MAPS_API_KEY: string;
 }
 
 var src_default = {
@@ -119,7 +120,7 @@ var src_default = {
       if (pathname === "/api/distance") {
         const origins = searchParams.get("origins");
         const destinations = searchParams.get("destinations");
-        const apiKey = "AIzaSyCHgcKbq0jlx20hoD5zI5xUzpWdVmO6gd4";
+        const apiKey = env.GOOGLE_MAPS_API_KEY;
         const apiUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origins)}&destinations=${encodeURIComponent(destinations)}&key=${apiKey}`;
         try {
           const response = await fetch(apiUrl);

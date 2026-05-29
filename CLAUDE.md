@@ -61,6 +61,6 @@ Capacity model: each date has a lunch (slots before 16:00) and dinner (slots ≥
 ## Secrets to be aware of
 
 - [src/App.js](src/App.js) contains a hardcoded OpenWeatherMap API key and a LIFF ID embedded in the bundle. Treat these as already-public.
-- [d1-tutorial/src/index.ts](d1-tutorial/src/index.ts) contains a hardcoded **Google Maps API key** in the `/api/distance` handler. This is server-side code but the key is committed in source — rotate it and move to `env` / a Wrangler secret when convenient.
+- The `/api/distance` handler reads its **Google Maps API key** from `env.GOOGLE_MAPS_API_KEY` — set it via `npx wrangler secret put GOOGLE_MAPS_API_KEY`. (An earlier hardcoded key was committed to this public repo and must be treated as compromised / rotated.) The `/api/recipe` Edamam `app_id`/`app_key` are still literals in source — lower sensitivity, but the same history-exposure applies.
 - The Resend API key is correctly held as a Wrangler secret (`RESEND_API_KEY`), not in source.
 - Do not introduce additional secrets in client code — anything sensitive belongs in the Workers backend (and ideally as a secret binding, not a literal).
