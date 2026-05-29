@@ -27,10 +27,7 @@ export default function RecipeList() {
     "alcohol-free",
   ];
 
-  const ID = "36954fea";
-  const KEY = "9918eeea4ae318b8c41da2d66fd50202";
-
-  const URL = `https://api.edamam.com/search?q=${query}&app_id=${ID}&app_key=${KEY}&health=${healthLabels}`;
+  const URL = `https://d1-tutorial.a29098477.workers.dev/api/recipe?q=${encodeURIComponent(query)}&health=${encodeURIComponent(healthLabels)}`;
 
   async function getRecipes() {
     const result = await axios.get(URL);

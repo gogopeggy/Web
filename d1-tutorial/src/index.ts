@@ -97,6 +97,25 @@ var src_default = {
         ).all();
         return new Response(JSON.stringify(results), { headers: corsHeaders });
       }
+      if (pathname === "/api/recipe") {
+        const q = searchParams.get("q") || "";
+        const health = searchParams.get("health") || "";
+        const appId = "36954fea";
+        const appKey = "9918eeea4ae318b8c41da2d66fd50202";
+        const apiUrl = `https://api.edamam.com/api/recipes/v2?type=public&q=${encodeURIComponent(q)}&app_id=${appId}&app_key=${appKey}&health=${encodeURIComponent(health)}`;
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error(`Edamam API request failed with status ${response.status}`);
+          }
+          const data = await response.json();
+          return new Response(JSON.stringify(data), { headers: corsHeaders });
+        } catch (error) {
+          return new Response(`Error: ${error.message}`, {
+            status: 500
+          });
+        }
+      }
       if (pathname === "/api/distance") {
         const origins = searchParams.get("origins");
         const destinations = searchParams.get("destinations");

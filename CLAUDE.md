@@ -37,6 +37,7 @@ Single-page React 18 app with these moving parts:
 Worker endpoints currently implemented in [d1-tutorial/src/index.ts](d1-tutorial/src/index.ts):
 - `GET  /api/expense`, `POST /api/expense/create`, `POST /api/expense/update`, `DELETE /api/expense/delete`
 - `GET  /api/camping`
+- `GET  /api/recipe` — Edamam recipe-search proxy (used by the Recipe page to dodge browser CORS; app_id/app_key live server-side here)
 - `GET  /api/distance` — Google Maps Distance Matrix proxy (used by the Camping page)
 - `POST /api/send-booking-email` — Resend-backed booking confirmation email
 
