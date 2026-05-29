@@ -120,7 +120,7 @@ export default function RecipeList() {
         <Grid container>
           {recipes.map((recipe) => {
             return (
-              <Grid item xs={12} sm={6} md={4} p={2} textAlign={"center"}>
+              <Grid item xs={12} sm={6} md={4} p={2} textAlign={"center"} key={recipe["recipe"]["label"]}>
                 <img
                   className="img"
                   src={recipe["recipe"]["image"]}

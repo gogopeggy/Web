@@ -158,7 +158,7 @@ export default function Camping() {
           </Stack>
         </Grid>
       </Grid>
-      <APIProvider apiKey={"AIzaSyBG8bp1UOEJayWQMSlD3UaBvy7BuqDqhQM"}>
+      <APIProvider apiKey={"AIzaSyBj42eds2YwcjtjPyUwH5q6PB4UWGMFtWM"}>
         <Map
           defaultTilt={20}
           defaultZoom={6}
