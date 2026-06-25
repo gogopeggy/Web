@@ -51,7 +51,7 @@ function App() {
 	function fetchWeather() {
 		axios
 			.get(
-				'https://api.openweathermap.org/data/2.5/weather?lat=25.0651335306964&lon=121.576200811347&lang=zh_tw&units=metric&appid=445813e62fa1a98ba142c1e48ccd0290'
+				'https://d1-tutorial.a29098477.workers.dev/api/weather?lat=25.0651335306964&lon=121.576200811347'
 			)
 			.then((response) => {
 				let data = {};
