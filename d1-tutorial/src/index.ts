@@ -17,6 +17,9 @@ export interface Env {
   DB: D1Database;
   RESEND_API_KEY: string;
   GOOGLE_MAPS_API_KEY: string;
+  OPENWEATHER_API_KEY: string;
+  EDAMAM_APP_ID: string;
+  EDAMAM_APP_KEY: string;
 }
 
 var src_default = {
@@ -98,11 +101,28 @@ var src_default = {
         ).all();
         return new Response(JSON.stringify(results), { headers: corsHeaders });
       }
+      if (pathname === "/api/weather") {
+        const lat = searchParams.get("lat") || "25.0651335306964";
+        const lon = searchParams.get("lon") || "121.576200811347";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&lang=zh_tw&units=metric&appid=${env.OPENWEATHER_API_KEY}`;
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error(`OpenWeatherMap API request failed with status ${response.status}`);
+          }
+          const data = await response.json();
+          return new Response(JSON.stringify(data), { headers: corsHeaders });
+        } catch (error) {
+          return new Response(`Error: ${error.message}`, {
+            status: 500
+          });
+        }
+      }
       if (pathname === "/api/recipe") {
         const q = searchParams.get("q") || "";
         const health = searchParams.get("health") || "";
-        const appId = "36954fea";
-        const appKey = "9918eeea4ae318b8c41da2d66fd50202";
+        const appId = env.EDAMAM_APP_ID;
+        const appKey = env.EDAMAM_APP_KEY;
         const apiUrl = `https://api.edamam.com/api/recipes/v2?type=public&q=${encodeURIComponent(q)}&app_id=${appId}&app_key=${appKey}&health=${encodeURIComponent(health)}`;
         try {
           const response = await fetch(apiUrl);

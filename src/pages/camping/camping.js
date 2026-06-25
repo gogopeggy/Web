@@ -13,7 +13,10 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 export default function Camping() {
-  // const Key = process.env.REACT_APP_API_MAPS;
+  // NOTE: a Google Maps JS key is always visible in the browser bundle — this
+  // env var keeps it out of source, but the real protection is HTTP-referrer +
+  // API restrictions on the key in Google Cloud Console. Rotate the old key.
+  const mapsApiKey = process.env.REACT_APP_API_MAPS;
   const [curLng, setCurLng] = useState();
   const [curLat, setCurLat] = useState();
   const [distance, setDistance] = useState();
@@ -165,7 +168,7 @@ export default function Camping() {
           </Stack>
         </Grid>
       </Grid>
-      <APIProvider apiKey={"AIzaSyBj42eds2YwcjtjPyUwH5q6PB4UWGMFtWM"}>
+      <APIProvider apiKey={mapsApiKey}>
         <Map
           defaultTilt={20}
           defaultZoom={6}

@@ -24,7 +24,10 @@ The Cloudflare Worker source lives in this repo under [d1-tutorial/](d1-tutorial
 - `cd d1-tutorial && npm install` — install worker deps
 - `npx wrangler dev` — run the worker locally
 - `npx wrangler deploy` — deploy to `https://d1-tutorial.a29098477.workers.dev`
-- `npx wrangler secret put RESEND_API_KEY` — set the Resend API key (used by `/api/send-booking-email`)
+- `npx wrangler secret put RESEND_API_KEY` — Resend API key (used by `/api/send-booking-email`)
+- `npx wrangler secret put GOOGLE_MAPS_API_KEY` — Distance Matrix key (used by `/api/distance`)
+- `npx wrangler secret put OPENWEATHER_API_KEY` — OpenWeatherMap key (used by `/api/weather`)
+- `npx wrangler secret put EDAMAM_APP_ID` / `EDAMAM_APP_KEY` — Edamam keys (used by `/api/recipe`)
 
 ## Architecture
 
@@ -37,8 +40,9 @@ Single-page React 18 app with these moving parts:
 Worker endpoints currently implemented in [d1-tutorial/src/index.ts](d1-tutorial/src/index.ts):
 - `GET  /api/expense`, `POST /api/expense/create`, `POST /api/expense/update`, `DELETE /api/expense/delete`
 - `GET  /api/camping`
-- `GET  /api/recipe` — Edamam recipe-search proxy (used by the Recipe page to dodge browser CORS; app_id/app_key live server-side here)
-- `GET  /api/distance` — Google Maps Distance Matrix proxy (used by the Camping page)
+- `GET  /api/recipe` — Edamam recipe-search proxy (used by the Recipe page to dodge browser CORS; app_id/app_key read from `EDAMAM_APP_ID`/`EDAMAM_APP_KEY` secrets)
+- `GET  /api/distance` — Google Maps Distance Matrix proxy (used by the Camping page; key from `GOOGLE_MAPS_API_KEY` secret)
+- `GET  /api/weather` — OpenWeatherMap proxy (used by `App.js` on mount so the OWM key stays server-side; key from `OPENWEATHER_API_KEY` secret)
 - `POST /api/send-booking-email` — Resend-backed booking confirmation email
 
 **Booking feature ([src/pages/booking/](src/pages/booking/))** — Two routes share one form component:
@@ -60,7 +64,7 @@ Capacity model: each date has a lunch (slots before 16:00) and dinner (slots ≥
 
 ## Secrets to be aware of
 
-- [src/App.js](src/App.js) contains a hardcoded OpenWeatherMap API key and a LIFF ID embedded in the bundle. Treat these as already-public.
-- The `/api/distance` handler reads its **Google Maps API key** from `env.GOOGLE_MAPS_API_KEY` — set it via `npx wrangler secret put GOOGLE_MAPS_API_KEY`. (An earlier hardcoded key was committed to this public repo and must be treated as compromised / rotated.) The `/api/recipe` Edamam `app_id`/`app_key` are still literals in source — lower sensitivity, but the same history-exposure applies.
-- The Resend API key is correctly held as a Wrangler secret (`RESEND_API_KEY`), not in source.
-- Do not introduce additional secrets in client code — anything sensitive belongs in the Workers backend (and ideally as a secret binding, not a literal).
+- **Server-side secrets (Wrangler secrets, not in source):** `RESEND_API_KEY`, `GOOGLE_MAPS_API_KEY` (Distance Matrix), `OPENWEATHER_API_KEY`, `EDAMAM_APP_ID`/`EDAMAM_APP_KEY`. All previously-committed values were exposed in this public repo's history and must be treated as compromised — rotate them, then `wrangler secret put` the new values. The OpenWeatherMap call was moved off the client onto the `/api/weather` proxy for this reason.
+- **Necessarily-public client keys:** the Google Maps **JavaScript** key ([camping.js](src/pages/camping/camping.js), via `REACT_APP_API_MAPS`) and the LIFF ID ([App.js](src/App.js)) ship in the browser bundle and cannot be hidden. The env var only keeps the Maps key out of source — protect the key itself with HTTP-referrer + API restrictions in Google Cloud Console, and rotate the old hardcoded one.
+- Client env vars: `REACT_APP_*` are baked into the bundle (NOT secret). The Maps key lives in `.env` (gitignored) as `REACT_APP_API_MAPS`.
+- Do not introduce additional secrets in client code — anything sensitive belongs in the Workers backend as a secret binding, not a literal.
