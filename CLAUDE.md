@@ -58,6 +58,8 @@ Capacity model: each date has a lunch (slots before 16:00) and dinner (slots ≥
 
 **UI library** — MUI v5 (`@mui/material`, `@mui/icons-material`, `@mui/x-data-grid`, `@mui/x-date-pickers` with the Moment adapter wired at the App root). The Camping page uses `@vis.gl/react-google-maps`. Date handling uses `moment` (with `moment/locale/zh-tw` loaded by the booking pages). `animejs` is installed but check before assuming any given page uses it.
 
+**Design system** — Global styling flows from a single MUI theme in [src/theme.js](src/theme.js), applied via `ThemeProvider` + `CssBaseline` at the App root ([src/App.js](src/App.js)). The dashboard pages (Home, Recipe, Expense, Camping, Profile, 404) use a navy/slate palette with the Inter font (loaded via `@import` in [src/index.css](src/index.css)). The **Booking** feature intentionally keeps a separate warm brown/gold restaurant brand (`#1f1b16`/`#d4a857`/`#fffdf8`) and is NOT themed by `src/theme.js` — treat it as a distinct visual identity when editing.
+
 **Components vs. pages** — [src/pages/](src/pages/)`<feature>/` holds route-level screens; [src/components/](src/components/) holds shared/reused pieces (currently `expense/` dialogs and a `generalDialog.js`). Booking-only sub-components live inside [src/pages/booking/](src/pages/booking/) rather than `src/components/`.
 
 **Code style** — The booking feature and recent edits to existing pages use tabs and single quotes; older untouched code uses 2-space indent and double quotes. There is no project-wide Prettier config at the repo root — only [d1-tutorial/.prettierrc](d1-tutorial/.prettierrc) (tabs + single quotes), which de facto reflects the newer style. Match the surrounding file when editing.

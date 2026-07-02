@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { useDispatch } from 'react-redux';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
 import { getWeather } from './Redux/weatherSlice';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import axios from 'axios';
@@ -65,26 +68,29 @@ function App() {
 	}
 
 	return (
-		<LocalizationProvider dateAdapter={AdapterMoment}>
-			<BrowserRouter>
-				<div className='App'>
-					{window.location.pathname === '/profile' ? null : <Navbar />}
-					<div className='content'>
-						<Routes>
-							<Route exact path='/' element={<Home />}></Route>
-							<Route path='*' element={<NotFound />}></Route>
-							<Route path='/recipe' element={<RecipeList />}></Route>
-							<Route path='/expense' element={<Expense />}></Route>
-							<Route path='/expense/details' element={<Details />}></Route>
-							<Route path='/camping' element={<Camping />}></Route>
-							<Route path='/booking' element={<Booking />}></Route>
-							<Route path='/booking/manage' element={<ManageBooking />}></Route>
-							<Route path='/profile' element={<Profile user={user} />}></Route>
-						</Routes>
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<LocalizationProvider dateAdapter={AdapterMoment}>
+				<BrowserRouter>
+					<div className='App'>
+						{window.location.pathname === '/profile' ? null : <Navbar />}
+						<div className='content'>
+							<Routes>
+								<Route exact path='/' element={<Home />}></Route>
+								<Route path='*' element={<NotFound />}></Route>
+								<Route path='/recipe' element={<RecipeList />}></Route>
+								<Route path='/expense' element={<Expense />}></Route>
+								<Route path='/expense/details' element={<Details />}></Route>
+								<Route path='/camping' element={<Camping />}></Route>
+								<Route path='/booking' element={<Booking />}></Route>
+								<Route path='/booking/manage' element={<ManageBooking />}></Route>
+								<Route path='/profile' element={<Profile user={user} />}></Route>
+							</Routes>
+						</div>
 					</div>
-				</div>
-			</BrowserRouter>
-		</LocalizationProvider>
+				</BrowserRouter>
+			</LocalizationProvider>
+		</ThemeProvider>
 	);
 }
 

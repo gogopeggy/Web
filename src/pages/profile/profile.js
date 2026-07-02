@@ -5,6 +5,7 @@ import page3 from "../../assets/profile/Slide3.PNG";
 import page4 from "../../assets/profile/Slide4.PNG";
 import webLogo from "../../assets/webLogo.png";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 const Profile = ({ user }) => {
   const pageList = [page1, page2, page3, page4];
@@ -30,9 +31,12 @@ const Profile = ({ user }) => {
         </Stack>
       ) : (
         <>
-          <p>{`Hi ${user}, please check my profile below:`}</p>
+          <Typography sx={{ p: 2, fontWeight: 600 }}>
+            {`Hi ${user}, please check my profile below:`}
+          </Typography>
           {pageList.map((list, index) => (
             <img
+              key={`page-${index}`}
               src={list}
               alt={`page${index}`}
               width={"100%"}

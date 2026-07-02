@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 import { getCamping } from "../../utility";
 import axios from "axios";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,6 +10,7 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 
 export default function Camping() {
   // NOTE: a Google Maps JS key is always visible in the browser bundle — this
@@ -122,27 +122,27 @@ export default function Camping() {
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} pb={2}>
           {destination ? (
-            <>
+            <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
               <Stack direction={"row"}>
                 <Typography pr={2} fontWeight={"bold"} fontSize={14}>
-                  From your location to :
+                  From your location to:
                 </Typography>
-                <Typography> {destination}</Typography>
+                <Typography fontSize={14}>{destination}</Typography>
               </Stack>
               <Stack direction={"row"}>
                 <Typography pr={2} fontWeight={"bold"} fontSize={14}>
-                  Distance :
+                  Distance:
                 </Typography>
                 <Typography fontSize={14}>
                   {distance}
-                  {`(about ${duration} dirve)`}
+                  {` (about ${duration} drive)`}
                 </Typography>
               </Stack>
-            </>
+            </Paper>
           ) : (
-            <Box>Let's find a place!</Box>
+            <Typography color="text.secondary">Let's find a place!</Typography>
           )}
         </Grid>
         <Grid item md={6} xs={12} sx={{ textAlign: { md: "right", xs: "left" } }}>
@@ -195,28 +195,34 @@ export default function Camping() {
             );
           })}
           {hoveredMarker && (
-            <div
-              style={{
+            <Paper
+              elevation={3}
+              sx={{
                 position: "absolute",
-                bottom: "10px",
-                left: "10px",
-                padding: "10px",
-                backgroundColor: "white",
-                boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
-                borderRadius: "5px",
+                bottom: 10,
+                left: 10,
+                p: 1.5,
+                borderRadius: 2,
                 zIndex: 1000,
+                maxWidth: 260,
               }}
             >
-              <Typography fontWeight={"bold"} fontSize={14} pb={2}>
+              <Typography fontWeight={"bold"} fontSize={14} pb={1}>
                 {hoveredMarker.name}
               </Typography>
-              <Typography fontSize={12}>
+              <Typography fontSize={12} color="text.secondary">
                 地址: {hoveredMarker.address}
               </Typography>
-              <Typography fontSize={12}>Lat: {hoveredMarker.lat}</Typography>
-              <Typography fontSize={12}>Lng: {hoveredMarker.lng}</Typography>
-              <Typography fontSize={12}>營位: {hoveredMarker.spot}</Typography>
-            </div>
+              <Typography fontSize={12} color="text.secondary">
+                Lat: {hoveredMarker.lat}
+              </Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Lng: {hoveredMarker.lng}
+              </Typography>
+              <Typography fontSize={12} color="text.secondary">
+                營位: {hoveredMarker.spot}
+              </Typography>
+            </Paper>
           )}
         </Map>
       </APIProvider>

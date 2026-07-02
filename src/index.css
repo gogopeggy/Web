@@ -1,66 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 * {
-	font-family: 'initial';
 	box-sizing: border-box;
 }
 
+body {
+	font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
 .navbar {
-	padding: 20px 16px 5px;
+	position: sticky;
+	top: 0;
+	z-index: 1100;
+	background: #ffffff;
+	border-bottom: 1px solid #e2e8f0;
+}
+
+.navbar-inner {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 14px 20px;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	max-width: 780px;
-	margin: 0 auto;
-	border-bottom: 2px solid #e0e0e0;
+	gap: 8px;
 }
 
-.navbar h1 {
-	color: rgb(91, 91, 91);
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 700;
+	font-size: 16px;
+	color: #1e293b;
 }
 
 .navbar .links {
 	margin-left: auto;
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
 	justify-content: flex-end;
 }
 
-.navactive {
-	color: #4cdce9 !important;
-}
-
-.navbar a {
-	margin-left: 16px;
-	text-decoration: none;
-	color: #3b3b3b;
-	padding: 6px;
-	font-family: 'emoji';
-}
-
-.navbar a:hover {
-	color: #4cdce9;
-}
-
+.navbar a,
 .navbar .nav-dropdown-trigger {
-	margin-left: 16px;
+	text-decoration: none;
+	color: #64748b;
+	font-size: 14px;
+	font-weight: 500;
+	padding: 8px 12px;
+	border-radius: 8px;
 	background: none;
 	border: none;
-	color: #3b3b3b;
-	padding: 6px;
-	font-family: 'emoji';
-	font-size: inherit;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
+	font-family: inherit;
 }
 
+.navbar a:hover,
 .navbar .nav-dropdown-trigger:hover {
-	color: #4cdce9;
+	color: #1e293b;
+	background: #f1f5f9;
 }
 
+.navbar a.navactive,
 .navbar .nav-dropdown-trigger.navactive {
-	color: #4cdce9;
+	color: #ffffff !important;
+	font-weight: 600;
+	background: #4b6692;
+}
+
+.navbar a.navactive:hover,
+.navbar .nav-dropdown-trigger.navactive:hover {
+	color: #ffffff !important;
+	background: #0f172a;
 }
 
 .content {
@@ -96,9 +113,8 @@
 }
 
 @media (max-width: 600px) {
-	.navbar {
-		max-width: 100%;
-		padding: 12px 12px 6px;
+	.navbar-inner {
+		padding: 10px 12px;
 	}
 	.navbar .links {
 		margin-left: 0;
@@ -108,9 +124,8 @@
 	}
 	.navbar a,
 	.navbar .nav-dropdown-trigger {
-		margin: 0 4px;
 		font-size: 13px;
-		padding: 4px;
+		padding: 6px 8px;
 	}
 	.content {
 		max-width: 100%;

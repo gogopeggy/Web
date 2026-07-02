@@ -181,6 +181,18 @@ export default function Details() {
           disableRowSelectionOnClick
           disableColumnResize
           disableColumnMenu
+          sx={{
+            border: "1px solid #e2e8f0",
+            borderRadius: 2,
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#f1f5f9",
+              fontWeight: 600,
+            },
+            "& .MuiDataGrid-row:hover": { backgroundColor: "#f8fafc" },
+            "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+              outline: "none",
+            },
+          }}
         />
       </Box>
       <ExpenseDialog
