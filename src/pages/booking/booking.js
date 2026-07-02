@@ -24,6 +24,15 @@ import { sendBookingConfirmation } from './email';
 
 const LARGE_PARTY_PHONE = '+886 1131415';
 
+const BRAND = {
+	brown: '#1f1b16',
+	gold: '#d4a857',
+	goldDark: '#c0973f',
+	cream: '#fffdf8',
+	creamText: '#f5e7c4',
+	line: '#e8dec0',
+};
+
 export default function Booking() {
 	const [value, setValue] = useState(
 		emptyBookingValue({ date: moment().add(1, 'day').startOf('day') })
@@ -129,14 +138,14 @@ export default function Booking() {
 						flexDirection: 'column',
 						borderRadius: { xs: 2, sm: 3 },
 						overflow: 'hidden',
-						bgcolor: '#fffdf8',
+						bgcolor: BRAND.cream,
 					}}
 				>
 					<Box
 						sx={{
 							flexShrink: 0,
-							bgcolor: '#1f1b16',
-							color: '#f5e7c4',
+							bgcolor: BRAND.brown,
+							color: BRAND.creamText,
 							px: { xs: 3, sm: 4 },
 							py: { xs: 2, sm: 3 },
 							textAlign: 'center',
@@ -146,7 +155,7 @@ export default function Booking() {
 							sx={{
 								fontSize: { xs: 28, sm: 36 },
 								mb: 0.5,
-								color: '#d4a857',
+								color: BRAND.gold,
 							}}
 						/>
 						<Typography
@@ -182,11 +191,11 @@ export default function Booking() {
 									variant='outlined'
 									onClick={handleReset}
 									sx={{
-										borderColor: '#1f1b16',
-										color: '#1f1b16',
+										borderColor: BRAND.brown,
+										color: BRAND.brown,
 										'&:hover': {
-											borderColor: '#1f1b16',
-											bgcolor: '#f5e7c4',
+											borderColor: BRAND.brown,
+											bgcolor: BRAND.creamText,
 										},
 									}}
 								>
@@ -212,7 +221,7 @@ export default function Booking() {
 										component='a'
 										href={`tel:${LARGE_PARTY_PHONE.replace(/\s/g, '')}`}
 										sx={{
-											color: '#1f1b16',
+											color: BRAND.brown,
 											fontWeight: 600,
 											textDecoration: 'none',
 											'&:hover': { textDecoration: 'underline' },
@@ -231,8 +240,8 @@ export default function Booking() {
 								flexShrink: 0,
 								px: { xs: 2.5, sm: 4 },
 								py: { xs: 1.5, sm: 2 },
-								borderTop: '1px solid #e8dec0',
-								bgcolor: '#fffdf8',
+								borderTop: `1px solid ${BRAND.line}`,
+								bgcolor: BRAND.cream,
 							}}
 						>
 							<Button
@@ -241,13 +250,13 @@ export default function Booking() {
 								onClick={handleReserve}
 								sx={{
 									py: 1.5,
-									bgcolor: '#d4a857',
-									color: '#1f1b16',
+									bgcolor: BRAND.gold,
+									color: BRAND.brown,
 									fontWeight: 700,
 									letterSpacing: 2,
 									borderRadius: 2,
 									boxShadow: 'none',
-									'&:hover': { bgcolor: '#c0973f', boxShadow: 'none' },
+									'&:hover': { bgcolor: BRAND.goldDark, boxShadow: 'none' },
 								}}
 							>
 								立即訂位
