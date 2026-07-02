@@ -9,6 +9,10 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
 
 export default function RecipeList() {
   const [query, setQuery] = useState("");
@@ -51,15 +55,10 @@ export default function RecipeList() {
 
   return (
     <Box>
-      <Typography
-        textAlign={"center"}
-        variant="h6"
-        fontFamily={"Segoe UI"}
-        color={"#a94848"}
-      >
+      <Typography textAlign={"center"} variant="h5" gutterBottom>
         Let's find your recipes
         <MenuBookIcon
-          sx={{ verticalAlign: "middle", pl: 1, color: "#40a0c2" }}
+          sx={{ verticalAlign: "middle", pl: 1, color: "secondary.main" }}
         />
       </Typography>
       <Box
@@ -77,7 +76,7 @@ export default function RecipeList() {
           id="outlined-basic"
           variant="outlined"
           type="text"
-          placeholder="Enter ingridient"
+          placeholder="Enter ingredient"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           size="small"
@@ -116,26 +115,35 @@ export default function RecipeList() {
           reset
         </Button>
       </Box>
-      <Box>
-        <Grid container>
+      <Box sx={{ mt: 2 }}>
+        <Grid container spacing={2}>
           {recipes.map((recipe) => {
+            const r = recipe["recipe"];
             return (
-              <Grid item xs={12} sm={6} md={4} p={2} textAlign={"center"} key={recipe["recipe"]["label"]}>
-                <img
-                  className="img"
-                  src={recipe["recipe"]["image"]}
-                  style={{ width: "100%", maxWidth: 230, height: "auto" }}
-                  onClick={() => window.open(recipe["recipe"]["url"])}
-                  alt={recipe["recipe"]["label"]}
-                />
-                <Button
-                  onClick={() => {
-                    window.open(recipe["recipe"]["url"]);
+              <Grid item xs={12} sm={6} md={4} key={r["label"]}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    transition: "0.2s",
+                    "&:hover": {
+                      boxShadow:
+                        "0 10px 25px -5px rgba(15,23,42,.10), 0 8px 10px -6px rgba(15,23,42,.06)",
+                      transform: "translateY(-2px)",
+                    },
                   }}
-                  sx={{ color: "#505050" }}
                 >
-                  {recipe["recipe"]["label"]}
-                </Button>
+                  <CardActionArea onClick={() => window.open(r["url"])}>
+                    <CardMedia
+                      component="img"
+                      height="160"
+                      image={r["image"]}
+                      alt={r["label"]}
+                    />
+                    <CardContent>
+                      <Typography variant="subtitle2">{r["label"]}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               </Grid>
             );
           })}
