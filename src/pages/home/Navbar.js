@@ -33,7 +33,7 @@ const Navbar = () => {
 				<div className='brand'>
 					<img src={logo} alt='logo' width={30} height={30} />
 					<Typography fontSize={16} fontWeight={700} fontFamily={'inherit'}>
-						Peggyideas
+						Ideas
 					</Typography>
 				</div>
 				<div className='links'>

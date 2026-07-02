@@ -122,7 +122,7 @@ export default function Camping() {
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} pb={2}>
           {destination ? (
             <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
               <Stack direction={"row"}>

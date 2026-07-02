@@ -67,11 +67,17 @@ body {
 	background: #f1f5f9;
 }
 
-.navactive,
+.navbar a.navactive,
 .navbar .nav-dropdown-trigger.navactive {
-	color: #1e293b !important;
+	color: #ffffff !important;
 	font-weight: 600;
-	background: #f1f5f9;
+	background: #4b6692;
+}
+
+.navbar a.navactive:hover,
+.navbar .nav-dropdown-trigger.navactive:hover {
+	color: #ffffff !important;
+	background: #0f172a;
 }
 
 .content {
