@@ -51,15 +51,15 @@ export default function Expense() {
   const [newRow, setNewRow] = useState(initialRow);
 
   const color = {
-    Transportation: "#ff9595",
-    Food: "#ffb944",
-    Social: "#ffea44",
-    Shopping: "#c1ff44",
-    Others: "#44ff96",
-    Investment: "#44ffd4",
-    Fun: "#9ceeff",
-    "Fixed Expense": "#44c9ff",
-    Daily: "#e8abff",
+    Transportation: "#ef8f8f",
+    Food: "#e0975f",
+    Social: "#d8b24a",
+    Shopping: "#8fae5c",
+    Others: "#5fae8c",
+    Investment: "#4f9d9d",
+    Fun: "#5f93c4",
+    "Fixed Expense": "#6f7fc4",
+    Daily: "#a97fc4",
   };
 
   useEffect(() => {
@@ -173,26 +173,35 @@ export default function Expense() {
       </Grid>
       <Grid container>
         {Object.keys(overall).map((o, index) => (
-          <Grid item md={3} xs={6} p={2} key={o + index}>
+          <Grid item md={3} xs={6} p={1.5} key={o + index}>
             <Paper
-              elevation={3}
-              sx={{ p: 1, height: 70, backgroundColor: color[o] }}
+              variant="outlined"
+              sx={{ p: 1.5, height: 92, borderRadius: 2 }}
             >
               <Button
                 sx={{
-                  fontSize: 10,
-                  color: "#686868",
-                  "&.MuiButton-root:hover": { backgroundColor: "#7676761f" },
+                  fontSize: 11,
+                  color: "text.secondary",
+                  p: 0,
+                  minWidth: 0,
+                  "&:hover": { backgroundColor: "transparent" },
                 }}
+                startIcon={
+                  <Box
+                    component="span"
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      backgroundColor: color[o],
+                    }}
+                  />
+                }
                 onClick={() => getData(o)}
               >
                 {o}
               </Button>
-              <Typography
-                fontSize={24}
-                textAlign={"center"}
-                style={{ verticalAlign: "bottom" }}
-              >
+              <Typography fontSize={22} fontWeight={700} textAlign={"center"}>
                 {currency(overall[o])}
               </Typography>
             </Paper>
