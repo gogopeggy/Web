@@ -29,51 +29,55 @@ const Navbar = () => {
 
 	return (
 		<nav className='navbar'>
-			<img src={logo} alt='logo' width={30} height={30} />
-			<Typography fontSize={14} pl={1} fontFamily={'system-ui'}>
-				Ideasss
-			</Typography>
-			<div className='links'>
-				{Object.keys(pages).map((p) => (
-					<Link
-						key={p}
-						to={pages[p]}
-						className={pathName === pages[p] ? 'navactive' : ''}
-					>
-						{p}
-					</Link>
-				))}
-				<button
-					type='button'
-					onClick={openBooking}
-					className={`nav-dropdown-trigger ${
-						isBookingActive ? 'navactive' : ''
-					}`}
-					aria-haspopup='menu'
-					aria-expanded={Boolean(bookingAnchor)}
-				>
-					Booking
-					<KeyboardArrowDownIcon sx={{ fontSize: 16, ml: 0.25 }} />
-				</button>
-				<Menu
-					anchorEl={bookingAnchor}
-					open={Boolean(bookingAnchor)}
-					onClose={closeBooking}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-					transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-				>
-					{bookingItems.map((item) => (
-						<MenuItem
-							key={item.path}
-							component={Link}
-							to={item.path}
-							onClick={closeBooking}
-							selected={pathName === item.path}
+			<div className='navbar-inner'>
+				<div className='brand'>
+					<img src={logo} alt='logo' width={30} height={30} />
+					<Typography fontSize={16} fontWeight={700} fontFamily={'inherit'}>
+						Peggyideas
+					</Typography>
+				</div>
+				<div className='links'>
+					{Object.keys(pages).map((p) => (
+						<Link
+							key={p}
+							to={pages[p]}
+							className={pathName === pages[p] ? 'navactive' : ''}
 						>
-							{item.label}
-						</MenuItem>
+							{p}
+						</Link>
 					))}
-				</Menu>
+					<button
+						type='button'
+						onClick={openBooking}
+						className={`nav-dropdown-trigger ${
+							isBookingActive ? 'navactive' : ''
+						}`}
+						aria-haspopup='menu'
+						aria-expanded={Boolean(bookingAnchor)}
+					>
+						Booking
+						<KeyboardArrowDownIcon sx={{ fontSize: 16, ml: 0.25 }} />
+					</button>
+					<Menu
+						anchorEl={bookingAnchor}
+						open={Boolean(bookingAnchor)}
+						onClose={closeBooking}
+						anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+						transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+					>
+						{bookingItems.map((item) => (
+							<MenuItem
+								key={item.path}
+								component={Link}
+								to={item.path}
+								onClick={closeBooking}
+								selected={pathName === item.path}
+							>
+								{item.label}
+							</MenuItem>
+						))}
+					</Menu>
+				</div>
 			</div>
 		</nav>
 	);
