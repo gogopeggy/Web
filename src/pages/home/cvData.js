@@ -31,7 +31,11 @@
 export const profile = {
 	name: '吳珮瑾',
 	nameEn: 'Peggy Wu',
+	// The portrait lives only in R2 — no copy is bundled — so changing it is an
+	// upload, not a deploy. `initial` is what the avatar falls back to if the
+	// image cannot be fetched.
 	initial: '吳',
+	photo: 'https://d1-tutorial.a29098477.workers.dev/api/cv-asset/profile-photo.jpg',
 	title: '前端工程師',
 	email: 'a29098477@gmail.com',
 	summary:

@@ -84,6 +84,10 @@ function isValidCv(doc) {
 		for (const key of ['nameEn', 'initial', 'title', 'email', 'summary']) {
 			if (!isOptionalString(doc.profile[key])) return false;
 		}
+		// Optional override for the bundled portrait; must be a real image URL.
+		if ('photo' in doc.profile && !/^https?:\/\//i.test(String(doc.profile.photo))) {
+			return false;
+		}
 	}
 
 	// `pdfUrl` ends up in an anchor href, so restrict it to http(s). Without
