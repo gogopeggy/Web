@@ -4,7 +4,7 @@
 //
 //   node scripts/cv-seed.mjs                       # pretty, for reading
 //   node scripts/cv-seed.mjs --min | Set-Clipboard # then paste into KV
-//   node scripts/cv-seed.mjs --no-pdf-url          # serve the bundled PDF instead
+//   node scripts/cv-seed.mjs --bundled-assets      # omit the R2 PDF/photo URLs
 //
 // Do NOT capture it with PowerShell's `>` or `Out-File -Encoding utf8`:
 // Windows PowerShell writes a UTF-8 BOM, and a BOM makes the stored value
@@ -31,13 +31,15 @@ const doc = {
 	languages,
 };
 
-// Included by default: the PDF is in R2, so a document without pdfUrl silently
-// downgrades the download button to the bundled copy. This was opt-in while the
-// bucket was still empty, which made the plain command emit a document that
-// quietly turned R2 off — hence the default now points at R2, and opting out is
-// the explicit choice.
-if (!process.argv.includes('--no-pdf-url')) {
-	doc.pdfUrl = 'https://d1-tutorial.a29098477.workers.dev/api/cv.pdf';
+// Point at R2 by default. Omitting these silently downgrades the page to the
+// copies compiled into the bundle, which looks identical today and would only
+// show up later as "I replaced the file in R2 and nothing changed". That bug
+// already happened once while these were opt-in, so opting *out* is now the
+// explicit choice.
+const WORKER = 'https://d1-tutorial.a29098477.workers.dev/api';
+if (!process.argv.includes('--bundled-assets')) {
+	doc.pdfUrl = `${WORKER}/cv.pdf`;
+	doc.profile = { ...profile, photo: `${WORKER}/cv-asset/profile-photo.jpg` };
 }
 
 const minified = process.argv.includes('--min');
