@@ -25,3 +25,8 @@ yarn-error.log*
 
 #d1
 /d1-tutorial
+
+# source résumé exports kept at the repo root — the shipped copy is
+# src/assets/Peggy-Wu-CV.pdf. Pattern rather than a filename so
+# per-application export names never reach the repo.
+/*.pdf

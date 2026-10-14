@@ -111,3 +111,13 @@ compatibility_flags = ["nodejs_compat"]
 binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "prod-d1-tutorial"
 database_id = "ab108d39-e8b0-4320-8eb3-65722746e121"
+
+# CV document, edited in the Cloudflare KV dashboard. Serves GET /api/cv.
+[[kv_namespaces]]
+binding = "CV_KV"
+id = "63718d9c676b47098b22e337a7b812d8"
+
+# CV PDF, uploaded in the Cloudflare R2 dashboard. Serves GET /api/cv.pdf.
+[[r2_buckets]]
+binding = "CV_BUCKET"
+bucket_name = "cv-assets"

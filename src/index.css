@@ -9,10 +9,14 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
-.navbar {
+/* Navbar and the weather strip pin to the top as one unit. */
+.topbar-stack {
 	position: sticky;
 	top: 0;
 	z-index: 1100;
+}
+
+.navbar {
 	background: #ffffff;
 	border-bottom: 1px solid #e2e8f0;
 }
@@ -121,14 +125,43 @@ body {
 		margin-top: 6px;
 		width: 100%;
 		justify-content: center;
+		gap: 2px;
 	}
 	.navbar a,
 	.navbar .nav-dropdown-trigger {
 		font-size: 13px;
-		padding: 6px 8px;
+		padding: 6px 7px;
 	}
 	.content {
 		max-width: 100%;
 		padding: 0 8px;
+	}
+}
+
+/*
+ * Narrow phones (iPhone SE and similar). At the sizes above, the five links
+ * overflow by a few pixels and wrap, leaving a single centred item stranded on
+ * a second row. Tighten enough to keep one row, and stop the row wrapping at
+ * all — if a future link does overflow, it scrolls rather than stranding.
+ */
+@media (max-width: 420px) {
+	.navbar-inner {
+		padding: 10px 8px;
+	}
+	.navbar .links {
+		flex-wrap: nowrap;
+		gap: 0;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+	.navbar .links::-webkit-scrollbar {
+		display: none;
+	}
+	.navbar a,
+	.navbar .nav-dropdown-trigger {
+		font-size: 12.5px;
+		padding: 6px 6px;
+		white-space: nowrap;
+		flex: none;
 	}
 }

@@ -15,6 +15,8 @@ var corsHeaders = {
 
 export interface Env {
   DB: D1Database;
+  CV_KV: KVNamespace;
+  CV_BUCKET?: R2Bucket; // optional so a missing binding degrades to 503, not a crash
   RESEND_API_KEY: string;
   GOOGLE_MAPS_API_KEY: string;
   OPENWEATHER_API_KEY: string;
@@ -100,6 +102,46 @@ var src_default = {
           "SELECT * FROM Camping"
         ).all();
         return new Response(JSON.stringify(results), { headers: corsHeaders });
+      }
+      // The CV document, edited directly in the Cloudflare KV dashboard.
+      // A miss returns 404 so the client keeps its bundled copy.
+      if (pathname === "/api/cv") {
+        const doc = await env.CV_KV.get("cv");
+        if (doc === null) {
+          return new Response(JSON.stringify({ error: "no CV document stored" }), {
+            status: 404,
+            headers: corsHeaders
+          });
+        }
+        return new Response(doc, {
+          headers: { ...corsHeaders, "Cache-Control": "public, max-age=60" }
+        });
+      }
+      // The CV PDF, uploaded through the Cloudflare R2 dashboard.
+      // NOTE: corsHeaders hardcodes Content-Type: application/json, so it is
+      // deliberately not spread here. Content-Disposition is required because
+      // the HTML `download` attribute is ignored cross-origin — without it the
+      // file opens in a tab under a hashed name instead of downloading.
+      if (pathname === "/api/cv.pdf") {
+        if (!env.CV_BUCKET) {
+          return new Response(
+            "CV_BUCKET is not bound — check the [[r2_buckets]] block in wrangler.toml",
+            { status: 503 }
+          );
+        }
+        const object = await env.CV_BUCKET.get("cv.pdf");
+        if (object === null) {
+          return new Response("No CV PDF uploaded", { status: 404 });
+        }
+        return new Response(object.body, {
+          headers: {
+            "Content-Type": "application/pdf",
+            "Content-Disposition": 'attachment; filename="Peggy-Wu-CV.pdf"',
+            "Cache-Control": "public, max-age=300",
+            "ETag": object.httpEtag,
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
       }
       if (pathname === "/api/weather") {
         const lat = searchParams.get("lat") || "25.0651335306964";
