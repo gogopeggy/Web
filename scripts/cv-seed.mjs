@@ -2,8 +2,9 @@
 // `d1-tutorial-cv-content` in the dashboard (bound as CV_KV in wrangler.toml);
 // the key is `cv`.
 //
-//   node scripts/cv-seed.mjs                      # pretty, for reading
-//   node scripts/cv-seed.mjs --min | Set-Clipboard   # then paste into KV
+//   node scripts/cv-seed.mjs                       # pretty, for reading
+//   node scripts/cv-seed.mjs --min | Set-Clipboard # then paste into KV
+//   node scripts/cv-seed.mjs --no-pdf-url          # serve the bundled PDF instead
 //
 // Do NOT capture it with PowerShell's `>` or `Out-File -Encoding utf8`:
 // Windows PowerShell writes a UTF-8 BOM, and a BOM makes the stored value
@@ -30,10 +31,12 @@ const doc = {
 	languages,
 };
 
-// Opt in only once the PDF is actually in R2 — pointing the download button at
-// an empty bucket would break it, whereas omitting pdfUrl keeps serving the
-// copy compiled into the bundle.
-if (process.argv.includes('--pdf-url')) {
+// Included by default: the PDF is in R2, so a document without pdfUrl silently
+// downgrades the download button to the bundled copy. This was opt-in while the
+// bucket was still empty, which made the plain command emit a document that
+// quietly turned R2 off — hence the default now points at R2, and opting out is
+// the explicit choice.
+if (!process.argv.includes('--no-pdf-url')) {
 	doc.pdfUrl = 'https://d1-tutorial.a29098477.workers.dev/api/cv.pdf';
 }
 
