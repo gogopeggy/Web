@@ -26,6 +26,49 @@ export const BUNDLED_CV = {
 };
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const isOptionalString = (v) => v === undefined || typeof v === 'string';
+
+/**
+ * Validation has to reach the fields the renderer actually dereferences, not
+ * just the containers. Checking only `Array.isArray(doc.skills)` lets
+ * `[{ label: '前端' }]` through, and `group.items.map` then throws mid-render;
+ * with no ErrorBoundary in the tree React unmounts the root and the page goes
+ * blank — the exact outcome this guard exists to prevent.
+ */
+function isValidBullet(bullet) {
+	if (!isPlainObject(bullet)) return false;
+	if (!isOptionalString(bullet.label)) return false;
+	if (!isOptionalString(bullet.short)) return false;
+	if (!isOptionalString(bullet.text)) return false;
+	if (bullet.children !== undefined) {
+		if (!Array.isArray(bullet.children)) return false;
+		if (!bullet.children.every(isValidBullet)) return false;
+	}
+	// Must render as something rather than an empty list item.
+	return (
+		isNonEmptyString(bullet.text) ||
+		isNonEmptyString(bullet.label) ||
+		Array.isArray(bullet.children)
+	);
+}
+
+// Keyed by the field each renderer in Home.js dereferences.
+const SECTION_ITEM_VALIDATORS = {
+	skills: (g) =>
+		isPlainObject(g) &&
+		isNonEmptyString(g.label) &&
+		Array.isArray(g.items) &&
+		g.items.every((item) => typeof item === 'string'),
+	education: (e) =>
+		isPlainObject(e) &&
+		isNonEmptyString(e.school) &&
+		isNonEmptyString(e.period) &&
+		isOptionalString(e.schoolEn) &&
+		isOptionalString(e.detail),
+	certifications: (c) => isPlainObject(c) && isNonEmptyString(c.name) && isOptionalString(c.issuer),
+	languages: (l) => isPlainObject(l) && isNonEmptyString(l.name) && isOptionalString(l.level),
+};
 
 /**
  * Guards against a half-edited KV document blanking the page. Anything that
@@ -33,12 +76,20 @@ const isNonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
  * Cloudflare dashboard costs nothing worse than a stale CV.
  */
 function isValidCv(doc) {
-	if (!doc || typeof doc !== 'object' || Array.isArray(doc)) return false;
+	if (!isPlainObject(doc)) return false;
 
 	if ('profile' in doc) {
-		if (!doc.profile || typeof doc.profile !== 'object') return false;
+		if (!isPlainObject(doc.profile)) return false;
 		if (!isNonEmptyString(doc.profile.name)) return false;
+		for (const key of ['nameEn', 'initial', 'title', 'email', 'summary']) {
+			if (!isOptionalString(doc.profile[key])) return false;
+		}
 	}
+
+	// `pdfUrl` ends up in an anchor href, so restrict it to http(s). Without
+	// this a `javascript:` value would execute on click, and a non-string would
+	// render as "[object Object]" and a dead download button.
+	if ('pdfUrl' in doc && !/^https?:\/\//i.test(String(doc.pdfUrl))) return false;
 
 	// A document that omits `experience` entirely is allowed — the bundled
 	// list is kept. One that includes it must be a usable list.
@@ -46,27 +97,48 @@ function isValidCv(doc) {
 		if (!Array.isArray(doc.experience) || doc.experience.length === 0) return false;
 		const everyEntryUsable = doc.experience.every(
 			(entry) =>
-				entry &&
-				typeof entry === 'object' &&
+				isPlainObject(entry) &&
 				isNonEmptyString(entry.company) &&
 				isNonEmptyString(entry.role) &&
 				isNonEmptyString(entry.period) &&
-				Array.isArray(entry.bullets)
+				isOptionalString(entry.companyNote) &&
+				isOptionalString(entry.logo) &&
+				isOptionalString(entry.intro) &&
+				Array.isArray(entry.bullets) &&
+				entry.bullets.every(isValidBullet)
 		);
 		if (!everyEntryUsable) return false;
 	}
 
-	for (const key of ['skills', 'education', 'certifications', 'languages']) {
-		if (key in doc && !Array.isArray(doc[key])) return false;
+	for (const [key, isValidItem] of Object.entries(SECTION_ITEM_VALIDATORS)) {
+		if (!(key in doc)) continue;
+		if (!Array.isArray(doc[key]) || !doc[key].every(isValidItem)) return false;
 	}
 
 	return true;
 }
 
 /**
+ * Merges a validated remote document over the bundled one.
+ *
+ * `profile` is merged per-key rather than replaced: validation only requires
+ * `name`, so a remote profile editing just the summary would otherwise drop
+ * `initial`, `title` and `email` — rendering an empty avatar and a contact
+ * button reading `mailto:undefined`. Arrays (experience, skills, …) are
+ * replaced wholesale, because there is no meaningful way to merge a list.
+ */
+function mergeCv(remote) {
+	const merged = { ...BUNDLED_CV, ...remote };
+	if (remote.profile) {
+		merged.profile = { ...BUNDLED_CV.profile, ...remote.profile };
+	}
+	return merged;
+}
+
+/**
  * Returns the CV document: the bundled copy first, replaced by the one stored
- * in Cloudflare KV once it arrives and passes validation. Keys absent from the
- * remote document keep their bundled values, so a partial edit is safe.
+ * in Cloudflare KV once it arrives and passes validation. Top-level keys absent
+ * from the remote document keep their bundled values, so a partial edit is safe.
  */
 export default function useCv() {
 	const [cv, setCv] = useState(BUNDLED_CV);
@@ -80,7 +152,7 @@ export default function useCv() {
 				if (!isValidCv(response.data)) {
 					throw new Error('remote CV document failed validation');
 				}
-				setCv({ ...BUNDLED_CV, ...response.data });
+				setCv(mergeCv(response.data));
 			})
 			.catch((error) => {
 				if (axios.isCancel(error)) return;

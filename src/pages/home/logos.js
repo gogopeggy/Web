@@ -6,7 +6,7 @@
 //
 // A remote CV document may also give `logo` as a full http(s) URL (an R2
 // object, say), which lets a new company's logo be added without a deploy.
-// See resolveLogo in useCv.js.
+// resolveLogo below handles both forms.
 
 import hourLoop from '../../assets/logos/hour-loop.png';
 import jumpOrange from '../../assets/logos/jump-orange.png';

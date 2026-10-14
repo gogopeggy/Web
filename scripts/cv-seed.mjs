@@ -1,5 +1,6 @@
-// Prints the CV document to paste into Cloudflare KV (namespace `cv-content`,
-// key `cv`).
+// Prints the CV document to paste into Cloudflare KV. The namespace is titled
+// `d1-tutorial-cv-content` in the dashboard (bound as CV_KV in wrangler.toml);
+// the key is `cv`.
 //
 //   node scripts/cv-seed.mjs                      # pretty, for reading
 //   node scripts/cv-seed.mjs --min | Set-Clipboard   # then paste into KV

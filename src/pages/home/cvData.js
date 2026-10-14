@@ -17,10 +17,11 @@
 //                `short` is a condensed label used only in the collapsed
 //                one-line summary; `children` nests one level deep.
 //
-// An entry renders always-open with no expand control unless there is a
-// summary worth collapsing to: it needs an `intro`, nested `children`, or at
-// least two labelled bullets. Unlabelled bullets yield no gist, so hiding them
-// behind a toggle would leave the collapsed card blank.
+// An entry is collapsible when it has an `intro`, nested `children`, or more
+// than one bullet; anything less renders always-open, since a toggle over a
+// single line is noise. The collapsed summary prefers the bullets' `short ||
+// label` joined, and falls back to the `intro` or the first bullet's text when
+// no bullet carries a label — so a collapsed card is never blank.
 //
 // THIS FILE MUST STAY PURE DATA — no imports, no expressions. It is both the
 // offline fallback and the source `scripts/cv-seed.mjs` reads (under Node,

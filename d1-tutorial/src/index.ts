@@ -16,7 +16,7 @@ var corsHeaders = {
 export interface Env {
   DB: D1Database;
   CV_KV: KVNamespace;
-  CV_BUCKET?: R2Bucket; // absent until R2 is enabled and the binding uncommented
+  CV_BUCKET?: R2Bucket; // optional so a missing binding degrades to 503, not a crash
   RESEND_API_KEY: string;
   GOOGLE_MAPS_API_KEY: string;
   OPENWEATHER_API_KEY: string;
@@ -124,9 +124,10 @@ var src_default = {
       // file opens in a tab under a hashed name instead of downloading.
       if (pathname === "/api/cv.pdf") {
         if (!env.CV_BUCKET) {
-          return new Response("R2 bucket not bound — enable R2 and uncomment the binding", {
-            status: 503
-          });
+          return new Response(
+            "CV_BUCKET is not bound — check the [[r2_buckets]] block in wrangler.toml",
+            { status: 503 }
+          );
         }
         const object = await env.CV_BUCKET.get("cv.pdf");
         if (object === null) {
