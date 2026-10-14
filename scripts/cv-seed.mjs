@@ -1,0 +1,40 @@
+// Prints the CV document to paste into Cloudflare KV (namespace `cv-content`,
+// key `cv`).
+//
+//   node scripts/cv-seed.mjs                      # pretty, for reading
+//   node scripts/cv-seed.mjs --min | Set-Clipboard   # then paste into KV
+//
+// Do NOT capture it with PowerShell's `>` or `Out-File -Encoding utf8`:
+// Windows PowerShell writes a UTF-8 BOM, and a BOM makes the stored value
+// fail JSON.parse. Pipe to the clipboard, or use
+// `[IO.File]::WriteAllText($p, (node scripts/cv-seed.mjs --min))`.
+//
+// This reads src/pages/home/cvData.js directly, which is why that file must
+// stay free of imports — Node cannot load the PNG imports a bundler handles.
+
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
+
+const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+const dataUrl = pathToFileURL(path.join(here, '..', 'src', 'pages', 'home', 'cvData.js')).href;
+
+const { profile, experience, skills, education, certifications, languages } = await import(dataUrl);
+
+const doc = {
+	profile,
+	experience,
+	skills,
+	education,
+	certifications,
+	languages,
+};
+
+// Opt in only once the PDF is actually in R2 — pointing the download button at
+// an empty bucket would break it, whereas omitting pdfUrl keeps serving the
+// copy compiled into the bundle.
+if (process.argv.includes('--pdf-url')) {
+	doc.pdfUrl = 'https://d1-tutorial.a29098477.workers.dev/api/cv.pdf';
+}
+
+const minified = process.argv.includes('--min');
+process.stdout.write(JSON.stringify(doc, null, minified ? 0 : '\t') + '\n');

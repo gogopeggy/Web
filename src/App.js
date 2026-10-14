@@ -9,6 +9,7 @@ import { getWeather } from './Redux/weatherSlice';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import axios from 'axios';
 import Navbar from './pages/home/Navbar';
+import WeatherBar from './components/WeatherBar';
 import NotFound from './pages/notFound/NotFound';
 import Home from './pages/home/Home';
 import RecipeList from './pages/recipe/recipeList';
@@ -60,6 +61,7 @@ function App() {
 				let data = {};
 				data['main'] = response.data.main;
 				data['des'] = response.data.weather;
+				data['name'] = response.data.name;
 				dispatch(getWeather(data));
 			})
 			.catch((error) => {
@@ -73,7 +75,12 @@ function App() {
 			<LocalizationProvider dateAdapter={AdapterMoment}>
 				<BrowserRouter>
 					<div className='App'>
-						{window.location.pathname === '/profile' ? null : <Navbar />}
+						{window.location.pathname === '/profile' ? null : (
+								<div className='topbar-stack'>
+									<Navbar />
+									<WeatherBar />
+								</div>
+							)}
 						<div className='content'>
 							<Routes>
 								<Route exact path='/' element={<Home />}></Route>

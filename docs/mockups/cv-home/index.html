@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CV Home mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ---- tokens mirrored from src/theme.js ---- */
+:root {
+	--bg: #f8fafc;
+	--paper: #ffffff;
+	--divider: #e2e8f0;
+	--txt: #1e293b;
+	--txt2: #64748b;
+	--blue: #2563eb;
+	--navy: #1e293b;
+	--navy-d: #0f172a;
+	--slate-50: #f1f5f9;
+	--active: #4b6692;
+	--card-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+	--card-shadow-h: 0 10px 24px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--txt);
+	font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	font-size: 14px;
+}
+
+/* ---- sticky top stack: navbar + weather strip ---- */
+.topstack { position: sticky; top: 0; z-index: 1100; }
+.navbar { background: var(--paper); border-bottom: 1px solid var(--divider); }
+.navbar-inner {
+	max-width: 900px; margin: 0 auto; padding: 14px 20px;
+	display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--txt); }
+.links { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; justify-content: flex-end; }
+.links a, .links button {
+	text-decoration: none; color: var(--txt2); font-size: 14px; font-weight: 500;
+	padding: 8px 12px; border-radius: 8px; background: none; border: none;
+	cursor: pointer; display: inline-flex; align-items: center; font-family: inherit;
+}
+.links a.navactive { color: #fff; font-weight: 600; background: var(--active); }
+
+/* ---- the weather strip (item 2) ---- */
+.wbar {
+	background: var(--slate-50);
+	border-bottom: 1px solid var(--divider);
+	font-size: 12.5px;
+	color: var(--txt2);
+	overflow: hidden;
+}
+.wbar-inner {
+	max-width: 900px; margin: 0 auto; padding: 6px 20px;
+	display: flex; align-items: center; gap: 10px;
+	white-space: nowrap;
+}
+.wbar .w { display: inline-flex; align-items: center; gap: 4px; }
+.wbar .w svg { width: 14px; height: 14px; fill: currentColor; opacity: 0.75; flex: none; }
+.wbar .temp { color: var(--txt); font-weight: 600; font-size: 13px; }
+.wbar .sep { width: 1px; height: 12px; background: #cbd5e1; flex: none; }
+.wbar .city { color: var(--txt); font-weight: 600; }
+.wbar .desc { color: var(--txt2); }
+
+/* ---- page shell ---- */
+.content { max-width: 780px; margin: 10px auto; padding: 0 12px 64px; }
+
+/* ---- cards ---- */
+.card {
+	background: var(--paper);
+	border: 1px solid var(--divider);
+	border-radius: 12px;
+	box-shadow: var(--card-shadow);
+}
+
+/* ---- hero ---- */
+.hero { padding: 22px 22px 18px; margin-top: 14px; }
+.hero-top { display: flex; align-items: center; gap: 14px; }
+.avatar {
+	width: 56px; height: 56px; border-radius: 50%; flex: none;
+	background: linear-gradient(140deg, #334155, #0f172a);
+	color: #fff; font-size: 22px; font-weight: 700;
+	display: flex; align-items: center; justify-content: center;
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+}
+.hero h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+.hero h1 .en { font-size: 16px; font-weight: 600; color: var(--txt2); margin-left: 8px; letter-spacing: 0; }
+.hero .role { margin-top: 3px; font-size: 13.5px; font-weight: 600; color: var(--blue); }
+.summary { margin: 16px 0 0; font-size: 13.5px; line-height: 1.85; color: #475569; text-align: justify; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.btn {
+	display: inline-flex; align-items: center; gap: 6px;
+	font-size: 13px; font-weight: 600; font-family: inherit;
+	padding: 7px 14px; border-radius: 8px; text-decoration: none; cursor: pointer;
+	transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+.btn svg { width: 16px; height: 16px; fill: currentColor; }
+.btn-primary { background: var(--navy); color: #fff; border: 1px solid var(--navy); }
+.btn-primary:hover { background: var(--navy-d); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--txt); border: 1px solid var(--divider); }
+.btn-outline:hover { background: var(--slate-50); border-color: #cbd5e1; }
+
+/* ---- section heading ---- */
+.sec {
+	display: flex; align-items: center; gap: 10px;
+	margin: 30px 0 12px; font-size: 13px; font-weight: 700;
+	color: var(--txt2); letter-spacing: 0.02em;
+}
+.sec::after { content: ''; flex: 1; height: 1px; background: var(--divider); }
+.sec .cnt { font-weight: 500; letter-spacing: 0; color: #94a3b8; font-size: 12px; }
+
+/* ---- experience timeline ---- */
+.timeline { position: relative; padding-left: 30px; }
+.rail {
+	position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px;
+	background: linear-gradient(to bottom, #cbd5e1, var(--divider));
+	transform: scaleY(0); transform-origin: top;
+	transition: transform 0.9s cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+.timeline.in .rail { transform: scaleY(1); }
+.job { position: relative; margin-bottom: 12px; }
+.dot {
+	position: absolute; left: -29px; top: 20px;
+	width: 12px; height: 12px; border-radius: 50%;
+	background: var(--paper); border: 2px solid #cbd5e1;
+	transform: scale(0.4); opacity: 0;
+	transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+.job.in .dot { transform: scale(1); opacity: 1; }
+.job.current .dot { border-color: var(--blue); background: var(--blue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14); }
+
+.job-head {
+	width: 100%; text-align: left; background: none; border: none;
+	font-family: inherit; color: inherit; cursor: pointer;
+	padding: 16px 18px; display: flex; align-items: flex-start; gap: 12px;
+	border-radius: 12px;
+}
+.job.static .job-head { cursor: default; }
+.jh-main { flex: 1; min-width: 0; }
+.jh-company { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+.jh-role { font-size: 13px; font-weight: 600; color: var(--blue); margin-left: 9px; }
+.jh-meta { display: flex; align-items: center; gap: 8px; flex: none; }
+.chip-date {
+	font-size: 11.5px; font-weight: 600; color: var(--txt2);
+	background: var(--slate-50); border: 1px solid var(--divider);
+	border-radius: 16px; padding: 3px 10px; white-space: nowrap;
+}
+.job.current .chip-date { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+.chev { width: 20px; height: 20px; fill: #94a3b8; flex: none; transition: transform 0.2s ease; margin-top: 1px; }
+.job.open .chev { transform: rotate(180deg); }
+
+.gist {
+	display: block;
+	margin-top: 6px; font-size: 12.5px; color: var(--txt2);
+	line-height: 1.6; overflow: hidden;
+	max-height: 21px; opacity: 1;
+	white-space: nowrap; text-overflow: ellipsis;
+	transition: max-height 0.28s ease, opacity 0.2s ease, margin-top 0.28s ease;
+}
+.job.static .gist { white-space: normal; max-height: none; }
+.job.open .gist { max-height: 0; opacity: 0; margin-top: 0; }
+.gist .d { color: #cbd5e1; margin: 0 5px; }
+
+.body-wrap { overflow: hidden; max-height: 0; transition: max-height 0.34s cubic-bezier(0.22, 0.7, 0.2, 1); }
+.body { padding: 0 18px 18px; }
+.body > .intro {
+	font-size: 13px; line-height: 1.8; color: #475569;
+	padding: 12px 0 2px; margin: 0; border-top: 1px solid var(--divider);
+}
+ul.bul { list-style: none; margin: 10px 0 0; padding: 0; }
+ul.bul > li {
+	position: relative; padding-left: 15px; margin-bottom: 9px;
+	font-size: 13px; line-height: 1.8; color: #475569;
+}
+ul.bul > li::before {
+	content: ''; position: absolute; left: 2px; top: 9px;
+	width: 5px; height: 5px; border-radius: 50%; background: #94a3b8;
+}
+ul.bul > li > b { color: var(--txt); font-weight: 600; }
+ul.sub { list-style: none; margin: 7px 0 0; padding: 0; }
+ul.sub > li {
+	position: relative; padding-left: 14px; margin-bottom: 6px;
+	font-size: 12.5px; line-height: 1.75; color: #64748b;
+}
+ul.sub > li::before {
+	content: ''; position: absolute; left: 2px; top: 10px;
+	width: 5px; height: 1.5px; background: #cbd5e1;
+}
+.job:not(.static) .job-head:hover .jh-company { color: var(--blue); }
+.job:not(.static):hover { box-shadow: var(--card-shadow-h); transform: translateY(-2px); }
+.job { transition: box-shadow 0.18s ease, transform 0.18s ease; }
+
+/* ---- skills ---- */
+.skills { padding: 6px 18px 14px; }
+.srow { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--divider); }
+.srow:last-child { border-bottom: none; }
+.slabel { flex: none; width: 112px; font-size: 12.5px; font-weight: 600; color: var(--txt2); padding-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+	font-size: 12.5px; font-weight: 500; color: var(--txt);
+	background: var(--paper); border: 1px solid var(--divider);
+	border-radius: 16px; padding: 3px 11px; line-height: 1.6;
+	opacity: 0; transform: translateY(6px);
+	transition: opacity 0.3s ease, transform 0.3s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.card.in .chip { opacity: 1; transform: none; }
+.chip:hover { background: var(--slate-50); border-color: #cbd5e1; }
+.chip.ai { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+
+/* ---- education / certs ---- */
+.erow { display: flex; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--divider); }
+.erow:last-child { border-bottom: none; }
+.edu, .certs { padding: 4px 18px 10px; }
+.eyear { flex: none; width: 112px; font-size: 12.5px; font-weight: 600; color: var(--txt2); }
+.eschool { font-size: 14px; font-weight: 600; }
+.edept { margin-top: 2px; font-size: 12.5px; color: var(--txt2); }
+.two { display: flex; gap: 12px; align-items: flex-start; }
+.two > .card { flex: 1; min-width: 0; }
+
+/* ---- scroll reveal ---- */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.42s ease-out, transform 0.42s cubic-bezier(0.22, 0.7, 0.2, 1); }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 600px) {
+	.navbar-inner { padding: 10px 12px; }
+	.links { margin-left: 0; margin-top: 6px; width: 100%; justify-content: center; }
+	.links a, .links button { font-size: 13px; padding: 6px 8px; }
+	.wbar-inner { padding: 6px 12px; gap: 7px; font-size: 12px; }
+	.wbar .spacer { margin-left: auto; }
+	.content { max-width: 100%; padding: 0 8px 48px; }
+	.hero { padding: 18px 16px 16px; }
+	.hero h1 { font-size: 21px; }
+	.hero h1 .en { display: block; margin-left: 0; margin-top: 2px; }
+	.timeline { padding-left: 22px; }
+	.rail { left: 3px; }
+	.dot { left: -22px; }
+	.job-head { padding: 14px 14px; }
+	.jh-company { font-size: 14.5px; display: block; }
+	.jh-role { display: block; margin-left: 0; margin-top: 2px; }
+	.body { padding: 0 14px 14px; }
+	.srow, .erow { flex-direction: column; gap: 7px; }
+	.slabel, .eyear { width: auto; padding-top: 0; }
+	.two { flex-direction: column; }
+}
+@media (max-width: 380px) {
+	.wbar .hide-xs { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.reveal, .rail, .dot, .chip, .chev, .body-wrap, .gist, .job, .btn { transition: none !important; }
+	.reveal { opacity: 1; transform: none; }
+	.rail { transform: scaleY(1); }
+	.dot { transform: scale(1); opacity: 1; }
+	.chip { opacity: 1; transform: none; }
+	html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="topstack">
+	<nav class="navbar">
+		<div class="navbar-inner">
+			<div class="brand">
+				<img src="brainLogo.png" alt="logo" width="30" height="30" />
+				<span>Ideas</span>
+			</div>
+			<div class="links">
+				<a href="#" class="navactive">Home</a>
+				<a href="#">Recipe</a>
+				<a href="#">Expense</a>
+				<a href="#">Camping</a>
+				<button type="button">Booking
+					<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;margin-left:2px"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+				</button>
+			</div>
+		</div>
+	</nav>
+	<div class="wbar">
+		<div class="wbar-inner">
+			<span class="w"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="city">Zhuzilin</span></span>
+			<span class="sep"></span>
+			<span class="w"><svg viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg><span class="temp">28°C</span></span>
+			<span class="w desc">多雲</span>
+			<span class="sep"></span>
+			<span class="w">體感 31°</span>
+			<span class="w sep hide-xs"></span>
+			<span class="w hide-xs">25° / 28°</span>
+		</div>
+	</div>
+</div>
+
+<div class="content">
+
+	<!-- ============ HERO ============ -->
+	<section class="card hero reveal">
+		<div class="hero-top">
+			<div class="avatar">吳</div>
+			<div>
+				<h1>吳珮瑾<span class="en">Peggy Wu</span></h1>
+				<div class="role">前端工程師</div>
+			</div>
+		</div>
+		<p class="summary">具備 3 年 React / TypeScript 前端開發經驗，加上將近 5 年美股上市跨境電商營運與產品管理背景，熟悉電商業務並能兼顧使用者體驗與商業目標。擅長開發響應式（RWD）、跨瀏覽器的 Web 應用，串接 RESTful API，並建立可重複使用的共用元件庫。現於台灣大哥大負責服務逾 1,500 帳號的內部系統前端，兼任兩項專案系統分析師，與後端及使用者緊密協作，從需求定義一路交付上線；並擔任團隊 AI 輔助開發導入種子成員。</p>
+		<div class="hero-actions">
+			<a class="btn btn-primary" href="#"><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>下載履歷 PDF</a>
+			<a class="btn btn-outline" href="mailto:a29098477@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>a29098477@gmail.com</a>
+		</div>
+	</section>
+
+	<!-- ============ EXPERIENCE ============ -->
+	<h2 class="sec">工作經驗 <span class="cnt">5 段經歷</span></h2>
+	<div class="timeline">
+		<span class="rail"></span>
+
+		<!-- 1 -->
+		<article class="job card reveal current open">
+			<span class="dot"></span>
+			<button class="job-head" type="button">
+				<span class="jh-main">
+					<span class="jh-company">台灣大哥大股份有限公司</span>
+					<span class="jh-role">前端工程師</span>
+					<span class="gist">前端開發（主力）<span class="d">·</span>共用元件庫<span class="d">·</span>品質與測試<span class="d">·</span>CI/CD<span class="d">·</span>系統分析<span class="d">·</span>後端支援<span class="d">·</span>AI 推動</span>
+				</span>
+				<span class="jh-meta">
+					<span class="chip-date">2025/9 – 仍在職</span>
+					<svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+				</span>
+			</button>
+			<div class="body-wrap">
+				<div class="body">
+					<ul class="bul" style="border-top:1px solid var(--divider);padding-top:12px">
+						<li><b>前端開發（主力）：</b>以 React + Vite + TypeScript 開發系統前端，從使用者需求訪談、Figma UI/UX 規劃到介面實作的完整開發流程，將業務需求轉化為元件、可維護且具型別安全的架構。</li>
+						<li><b>共用元件庫與設計規範：</b>建立並持續維護前端共用元件庫，開發新元件並統一樣式與設計邏輯，目前由 50+ 個功能模組共用，新頁面開發時間縮短約 20%。</li>
+						<li><b>品質與測試：</b>上版前依序經 AI Code Review、開發人員 SIT 整合測試及使用者 UAT 驗收測試。</li>
+						<li><b>CI/CD 與部署：</b>團隊透過輪值的方式上版，透過 Jenkins 執行建置打包，並以 Rancher 搭配 Argo CD 將服務持續部署（CD）至 Kubernetes 環境，確保上版流程穩定且可追蹤。</li>
+						<li><b>系統分析（SA）：</b>主導需求會議並撰寫規格文件，規劃與 3 個外部系統介接方案，專案於 2026/09 如期上線。</li>
+						<li><b>後端支援與權限管理：</b>輔助 Java API 開發並獨立支援後端任務，具備前後端整合與全端問題排查能力；同時負責全系統使用者帳號與權限控管，建立權限設定流程。</li>
+						<li><b>AI 推動種子成員：</b>擔任團隊 AI 輔助開發推動者，將 Claude Code 導入開發流程（AI-SDLC），落地規格驅動開發（Spec-Driven Development），並於部門內分享實踐經驗。</li>
+					</ul>
+				</div>
+			</div>
+		</article>
+
+		<!-- 2 -->
+		<article class="job card reveal static">
+			<span class="dot"></span>
+			<div class="job-head">
+				<span class="jh-main">
+					<span class="jh-company">橘子跳動有限公司</span>
+					<span class="jh-role">專案經理</span>
+					<span class="gist" style="max-height:none">負責電商平台產品規劃與功能優化，帶領團隊建立系統化營運管理機制</span>
+				</span>
+				<span class="jh-meta">
+					<span class="chip-date">2025/5 – 2025/9</span>
+				</span>
+			</div>
+		</article>
+
+		<!-- 3 -->
+		<article class="job card reveal">
+			<span class="dot"></span>
+			<button class="job-head" type="button">
+				<span class="jh-main">
+					<span class="jh-company">麻古茶坊 Macu Tea</span>
+					<span class="jh-role">軟體工程師</span>
+					<span class="gist">營運管理系統<span class="d">·</span>海外訂單及庫存管理系統<span class="d">·</span>API 與監控<span class="d">·</span>Grafana 數據表</span>
+				</span>
+				<span class="jh-meta">
+					<span class="chip-date">2023/8 – 2025/4</span>
+					<svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+				</span>
+			</button>
+			<div class="body-wrap">
+				<div class="body">
+					<p class="intro">以 React + MUI + TypeScript 同時開發兩個跨瀏覽器 PWA 響應式內部系統及負責資料整合：</p>
+					<ul class="bul">
+						<li>
+							<b>營運管理系統，服務超過 500 名用戶：</b>
+							<ul class="sub">
+								<li><b>物料訂購系統：</b>讓門市人員線上下單並即時查看訂單狀態。</li>
+								<li><b>每日營業報表：</b>以 Node.js 每日從本地 SQL 伺服器抓取 350+ 家門店銷售數據約 30 萬筆資料並傳送至 AWS，前端以 GraphQL 取得資料並支援匯出 Excel 檔。</li>
+								<li><b>配送表：</b>建立 API 接收 POS 商 Webhook 事件並存至 DynamoDB，串接 Uber API 管理配送，統整成配送表供管理者分析比較。</li>
+								<li><b>公告系統：</b>公告存於 DynamoDB、附件存於 S3，並追蹤已讀狀態控制通知顯示。</li>
+							</ul>
+						</li>
+						<li>
+							<b>海外訂單及庫存管理系統，提供海外員工及業主使用：</b>
+							<ul class="sub">
+								<li>建立物料清單與訂單儀表板，支援多條件篩選與查找訂單；使用者下單或更新訂單時觸發 Lambda function 自動寄送 Excel 通知信。</li>
+								<li><b>效能優化：</b>以 GraphQL nextToken 分頁分批載入資料，降低單次請求負載並提升效能。</li>
+								<li><b>狀態同步：</b>透過 GraphQL Mutation 更新與追蹤訂單狀態，確保內外部資訊同步。</li>
+								<li><b>多語系：</b>透過 i18n 實作中英雙語切換，提供海外使用者在地化介面。</li>
+							</ul>
+						</li>
+						<li><b>API 與監控：</b>透過 API Gateway 串接 RESTful API，並以 CloudWatch 監控系統運作。</li>
+						<li><b>Grafana 數據表：</b>串接 SQL 伺服器建立全台 350 家門店銷售報表，供經理產出每週報告。</li>
+					</ul>
+				</div>
+			</div>
+		</article>
+
+		<!-- 4 -->
+		<article class="job card reveal static">
+			<span class="dot"></span>
+			<div class="job-head">
+				<span class="jh-main">
+					<span class="jh-company">Hour Loop<span style="font-weight:500;color:var(--txt2);font-size:13px"> (NASDAQ: Hour)</span></span>
+					<span class="jh-role">軟體工程師</span>
+					<span class="gist" style="max-height:none">2023/3 內部轉調軟體工程師，負責內部系統功能優化與維運</span>
+				</span>
+				<span class="jh-meta">
+					<span class="chip-date">2023/3 – 2023/8</span>
+				</span>
+			</div>
+		</article>
+
+		<!-- 5 -->
+		<article class="job card reveal static">
+			<span class="dot"></span>
+			<div class="job-head">
+				<span class="jh-main">
+					<span class="jh-company">Hour Loop<span style="font-weight:500;color:var(--txt2);font-size:13px"> (NASDAQ: Hour)</span></span>
+					<span class="jh-role">Business Manager → Senior Business Manager</span>
+					<span class="gist" style="max-height:none">跨境電商營運管理</span>
+				</span>
+				<span class="jh-meta">
+					<span class="chip-date">2018 – 2023/3</span>
+				</span>
+			</div>
+		</article>
+	</div>
+
+	<!-- ============ SKILLS ============ -->
+	<h2 class="sec">專業技能</h2>
+	<div class="card skills reveal">
+		<div class="srow">
+			<div class="slabel">前端</div>
+			<div class="chips">
+				<span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">HTML / CSS</span><span class="chip">MUI</span><span class="chip">Redux Toolkit</span><span class="chip">Figma</span>
+			</div>
+		</div>
+		<div class="srow">
+			<div class="slabel">後端 / 資料庫</div>
+			<div class="chips">
+				<span class="chip">Node.js</span><span class="chip">GraphQL</span><span class="chip">PostgreSQL</span><span class="chip">MS SQL</span><span class="chip">MySQL</span>
+			</div>
+		</div>
+		<div class="srow">
+			<div class="slabel">雲端 / DevOps</div>
+			<div class="chips">
+				<span class="chip">AWS</span><span class="chip">Cloudflare</span><span class="chip">Kubernetes</span><span class="chip">Rancher</span><span class="chip">Argo CD</span><span class="chip">Jenkins</span>
+			</div>
+		</div>
+		<div class="srow">
+			<div class="slabel">工具 / 版控</div>
+			<div class="chips">
+				<span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">SourceTree</span><span class="chip">Visual Studio</span><span class="chip">Postman</span><span class="chip">Grafana</span><span class="chip">Bitbucket</span>
+			</div>
+		</div>
+		<div class="srow">
+			<div class="slabel">AI 輔助開發工具</div>
+			<div class="chips">
+				<span class="chip ai">Claude Code</span><span class="chip ai">Cursor</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============ EDUCATION ============ -->
+	<h2 class="sec">學歷</h2>
+	<div class="card edu reveal">
+		<div class="erow">
+			<div class="eyear">2014 – 2018</div>
+			<div>
+				<div class="eschool">東吳大學 <span style="font-weight:500;color:var(--txt2);font-size:12.5px">Soochow University</span></div>
+				<div class="edept">企業管理學系</div>
+			</div>
+		</div>
+		<div class="erow">
+			<div class="eyear">2017 – 2018</div>
+			<div>
+				<div class="eschool">Wesleyan College</div>
+				<div class="edept">交換學生</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============ CERTS + LANGUAGE ============ -->
+	<div class="two" style="margin-top:0">
+		<div style="flex:1;min-width:0">
+			<h2 class="sec">證照</h2>
+			<div class="card certs reveal">
+				<div class="erow"><div class="eschool" style="font-size:13px">網頁資料擷取與分析 <span style="font-weight:500;color:var(--txt2);font-size:12.5px">TQC</span></div></div>
+				<div class="erow"><div class="eschool" style="font-size:13px">程式語言 <span style="font-weight:500;color:var(--txt2);font-size:12.5px">TQC</span></div></div>
+			</div>
+		</div>
+		<div style="flex:1;min-width:0">
+			<h2 class="sec">語言</h2>
+			<div class="card certs reveal">
+				<div class="erow"><div class="eschool" style="font-size:13px">英文 <span style="font-weight:500;color:var(--txt2);font-size:12.5px">精通</span></div></div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	var params = new URLSearchParams(location.search);
+	var revealAll = params.get('reveal') === 'all';
+	var expandAll = params.get('expand') === 'all';
+	var collapseAll = params.get('collapse') === 'all';
+
+	// --- collapse / expand ---
+	function setOpen(job, open) {
+		var wrap = job.querySelector('.body-wrap');
+		job.classList.toggle('open', open);
+		if (!wrap) return;
+		wrap.style.maxHeight = open ? wrap.scrollHeight + 'px' : '0px';
+	}
+	document.querySelectorAll('.job').forEach(function (job) {
+		var head = job.querySelector('button.job-head');
+		if (!head) return;
+		head.addEventListener('click', function () {
+			setOpen(job, !job.classList.contains('open'));
+		});
+	});
+
+	// --- scroll reveal ---
+	var io = new IntersectionObserver(
+		function (entries) {
+			entries.forEach(function (e) {
+				if (e.isIntersecting) {
+					e.target.classList.add('in');
+					io.unobserve(e.target);
+				}
+			});
+		},
+		{ threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+	);
+	var idx = 0;
+	document.querySelectorAll('.reveal').forEach(function (el) {
+		el.style.transitionDelay = (idx % 4) * 60 + 'ms';
+		idx++;
+		io.observe(el);
+	});
+	var tl = document.querySelector('.timeline');
+	new IntersectionObserver(function (es) {
+		es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
+	}, { threshold: 0.05 }).observe(tl);
+
+	// --- chip stagger ---
+	document.querySelectorAll('.chips').forEach(function (group) {
+		group.querySelectorAll('.chip').forEach(function (c, i) {
+			c.style.transitionDelay = 120 + i * 40 + 'ms';
+		});
+	});
+
+	// --- screenshot helpers ---
+	function applyFlags() {
+		if (revealAll) {
+			document.querySelectorAll('.reveal').forEach(function (el) {
+				el.style.transitionDelay = '0ms';
+				el.classList.add('in');
+			});
+			document.querySelectorAll('.chip').forEach(function (c) { c.style.transitionDelay = '0ms'; });
+			tl.classList.add('in');
+		}
+		if (expandAll) {
+			document.querySelectorAll('.job').forEach(function (j) {
+				if (j.querySelector('button.job-head')) setOpen(j, true);
+			});
+		}
+		if (collapseAll) {
+			document.querySelectorAll('.job').forEach(function (j) {
+				if (j.querySelector('button.job-head')) setOpen(j, false);
+			});
+		}
+	}
+	// initial state: card 1 open
+	document.querySelectorAll('.job.open').forEach(function (j) { setOpen(j, true); });
+	applyFlags();
+	window.addEventListener('resize', function () {
+		document.querySelectorAll('.job.open').forEach(function (j) {
+			var w = j.querySelector('.body-wrap');
+			if (w) w.style.maxHeight = w.scrollHeight + 'px';
+		});
+	});
+</script>
+</body>
+</html>
