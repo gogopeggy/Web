@@ -143,6 +143,44 @@ var src_default = {
           }
         });
       }
+      // Any other CV asset in the bucket (the portrait, a future logo), so a
+      // replacement can be uploaded in the R2 dashboard without a deploy.
+      // Served inline rather than as an attachment — these are rendered, not
+      // downloaded. The key is restricted to a flat filename: no slashes and
+      // no dots-only segments, so the path cannot walk outside the bucket.
+      if (pathname.startsWith("/api/cv-asset/")) {
+        if (!env.CV_BUCKET) {
+          return new Response(
+            "CV_BUCKET is not bound — check the [[r2_buckets]] block in wrangler.toml",
+            { status: 503 }
+          );
+        }
+        const key = decodeURIComponent(pathname.slice("/api/cv-asset/".length));
+        if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(key) || key.includes("..")) {
+          return new Response("Invalid asset key", { status: 400 });
+        }
+        const object = await env.CV_BUCKET.get(key);
+        if (object === null) {
+          return new Response("No such asset", { status: 404 });
+        }
+        return new Response(object.body, {
+          headers: {
+            // Prefer the type recorded at upload time; fall back by extension.
+            "Content-Type":
+              object.httpMetadata?.contentType ||
+              (key.endsWith(".png")
+                ? "image/png"
+                : key.endsWith(".jpg") || key.endsWith(".jpeg")
+                  ? "image/jpeg"
+                  : key.endsWith(".svg")
+                    ? "image/svg+xml"
+                    : "application/octet-stream"),
+            "Cache-Control": "public, max-age=300",
+            "ETag": object.httpEtag,
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
       if (pathname === "/api/weather") {
         const lat = searchParams.get("lat") || "25.0651335306964";
         const lon = searchParams.get("lon") || "121.576200811347";
