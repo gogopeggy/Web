@@ -13,6 +13,7 @@ import { ACCENT } from './accent';
 import { RAIL_LEFT, RAIL_WIDTH, TIMELINE_PAD } from './timeline';
 import useCv from './useCv';
 import bundledCvPdf from '../../assets/Peggy-Wu-CV.pdf';
+import bundledPhoto from '../../assets/profile-photo.jpg';
 
 function SectionHeading({ children, note }) {
 	return (
@@ -128,15 +129,19 @@ export default function Home() {
 				<Card sx={{ mt: 1.75, px: { xs: 2, sm: 2.75 }, py: { xs: 2.25, sm: 2.75 } }}>
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 1.75 }}>
 						<Avatar
+							src={profile.photo || bundledPhoto}
+							alt={profile.name}
 							sx={{
-								width: 56,
-								height: 56,
-								fontSize: 22,
+								width: 64,
+								height: 64,
+								fontSize: 24,
 								fontWeight: 700,
 								background: 'linear-gradient(140deg, #334155, #0f172a)',
 								boxShadow: '0 2px 8px rgba(15,23,42,.18)',
 							}}
 						>
+							{/* MUI falls back to these children if the image fails
+							    to load, so the monogram stays as a safety net. */}
 							{profile.initial}
 						</Avatar>
 						<Box>

@@ -31,6 +31,9 @@
 export const profile = {
 	name: '吳珮瑾',
 	nameEn: 'Peggy Wu',
+	// `initial` is the fallback the avatar shows if the portrait fails to load.
+	// Set `photo` to an http(s) URL in the KV document to override the bundled
+	// src/assets/profile-photo.jpg without a deploy.
 	initial: '吳',
 	title: '前端工程師',
 	email: 'a29098477@gmail.com',
